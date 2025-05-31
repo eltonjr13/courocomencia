@@ -10,9 +10,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
-        code: ['monospace'],
+        body: ['Space Grotesk', 'sans-serif'],
+        headline: ['Space Grotesk', 'sans-serif'],
+        code: ['Space Grotesk', 'monospace'], // Using Space Grotesk for code as well for consistency in this retro-tech style
       },
       colors: {
         background: 'hsl(var(--background))',
