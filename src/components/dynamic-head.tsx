@@ -1,3 +1,4 @@
+
 "use client";
 
 import { motion } from "framer-motion";
@@ -97,14 +98,14 @@ export default function DynamicHead() {
           animate={{
             x: [p.targetX, p.targetX + p.idleAmplitudeX, p.targetX],
             y: [p.targetY, p.targetY + p.idleAmplitudeY, p.targetY],
-            opacity: [p.targetOpacity, p.targetOpacity * 0.7, p.targetOpacity],
+            opacity: p.targetOpacity, // Changed: Target a single opacity value after assembly
           }}
           transition={{
             // Assembly part (first segment of x, y, opacity animation)
             x: { duration: p.assemblyDuration, ease: "circOut", delay: p.assemblyDelay },
             y: { duration: p.assemblyDuration, ease: "circOut", delay: p.assemblyDelay },
             opacity: { duration: p.assemblyDuration * 0.8, ease: "linear", delay: p.assemblyDelay },
-            // Default for continuous looping part
+            // Default for continuous looping part (applies to x and y keyframes)
             default: {
               duration: p.idleDuration,
               repeat: Infinity,
