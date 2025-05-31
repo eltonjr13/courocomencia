@@ -46,12 +46,12 @@ export default function Home() {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-5xl md:text-7xl font-headline mb-4 md:mb-6 text-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary">
-            Dynamic Persona
+            CouroComencia.space
           </h1>
-          <p className="text-xl md:text-2xl font-body mb-2 md:mb-3 text-foreground/90">
+          <p className="text-xl md:text-2xl font-body mb-2 md:mb-3 text-accent">
             Explorando Novos Limites
           </p>
-          <p className="text-lg md:text-xl font-body text-foreground/80">
+          <p className="text-lg md:text-xl font-body text-accent">
             Inovação em cada detalhe
           </p>
         </motion.div>
