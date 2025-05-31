@@ -4,8 +4,14 @@
 import { motion } from "framer-motion";
 import { useEffect, useState, useMemo } from "react";
 
-const NUM_PARTICLES = 100;
-const SYMBOLS = ['*', '+', '.', ':', '^', '~', '-', '_', '|', '/', '\\', '0', '1', '<', '>'];
+const NUM_PARTICLES = 250; // Increased from 100
+const SYMBOLS = [
+  '*', '+', '.', ':', '^', '~', '-', '_', '|', '/', '\\', '0', '1', '<', '>',
+  '=', '@', '#', '$', '%', '&', '!', '?', '[', ']', '{', '}', ',', ';',
+  "'", '"', '`', '(', ')', 'A', 'B', 'C', 'X', 'Y', 'Z', 'ç', 'ü', 'é',
+  'â', 'ä', 'à', 'å', 'ê', 'ë', 'è', 'ï', 'î', 'ì', 'Ä', 'Å', 'É', 'æ', 'Æ',
+  'ô', 'ö', 'ò', 'û', 'ù', 'ÿ', 'Ö', 'Ü', 'ø', '£', 'Ø', '×', 'ƒ'
+];
 const HEAD_CONTAINER_WIDTH = 300;
 const HEAD_CONTAINER_HEIGHT = 400;
 const HEAD_ELLIPSE_RADIUS_X = HEAD_CONTAINER_WIDTH / 2 * 0.8;
@@ -61,11 +67,11 @@ export default function DynamicHead({ isDissolving = false }: DynamicHeadProps) 
         targetY: Math.sin(angle) * HEAD_ELLIPSE_RADIUS_Y * radiusFactor,
         dissolveX: Math.cos(dissolveAngle) * dissolveRadius,
         dissolveY: Math.sin(dissolveAngle) * dissolveRadius,
-        assemblyDelay: Math.random() * 1.5,
-        assemblyDuration: 1 + Math.random() * 1.5,
+        assemblyDelay: Math.random() * 0.8, // Reduced from Math.random() * 1.5
+        assemblyDuration: 0.6 + Math.random() * 0.9, // Reduced from 1 + Math.random() * 1.5
         idleAmplitudeX: (Math.random() - 0.5) * 8,
         idleAmplitudeY: (Math.random() - 0.5) * 8,
-        idleDuration: 3 + Math.random() * 3,
+        idleDuration: 1.8 + Math.random() * 1.8, // Reduced from 3 + Math.random() * 3
         initialOpacity: 0,
         targetOpacity: Math.random() * 0.4 + 0.4,
         fontSize: `${Math.floor(Math.random() * 4) + 10}px`,
@@ -113,7 +119,7 @@ export default function DynamicHead({ isDissolving = false }: DynamicHeadProps) 
             } : {
               x: [p.targetX, p.targetX + p.idleAmplitudeX, p.targetX],
               y: [p.targetY, p.targetY + p.idleAmplitudeY, p.targetY],
-              opacity: p.targetOpacity,
+              opacity: p.targetOpacity, // Changed from array to static targetOpacity
               scale: 1,
             }
           }
@@ -151,3 +157,4 @@ export default function DynamicHead({ isDissolving = false }: DynamicHeadProps) 
     </motion.div>
   );
 }
+

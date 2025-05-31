@@ -4,7 +4,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Couro Comencia - Dynamic Persona',
+  title: 'CouroComencia - Dynamic Persona',
   description: 'Portfolio dinâmico explorando design, estratégia e tecnologia.',
 };
 
