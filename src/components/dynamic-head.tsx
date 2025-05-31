@@ -12,8 +12,8 @@ const SYMBOLS = [
   'â', 'ä', 'à', 'å', 'ê', 'ë', 'è', 'ï', 'î', 'ì', 'Ä', 'Å', 'É', 'æ', 'Æ',
   'ô', 'ö', 'ò', 'û', 'ù', 'ÿ', 'Ö', 'Ü', 'ø', '£', 'Ø', '×', 'ƒ'
 ];
-const HEAD_CONTAINER_WIDTH = 300;
-const HEAD_CONTAINER_HEIGHT = 400;
+const HEAD_CONTAINER_WIDTH = 450; // Increased from 300
+const HEAD_CONTAINER_HEIGHT = 600; // Increased from 400
 const HEAD_ELLIPSE_RADIUS_X = HEAD_CONTAINER_WIDTH / 2 * 0.8;
 const HEAD_ELLIPSE_RADIUS_Y = HEAD_CONTAINER_HEIGHT / 2 * 0.9;
 
@@ -119,7 +119,7 @@ export default function DynamicHead({ isDissolving = false }: DynamicHeadProps) 
             } : {
               x: [p.targetX, p.targetX + p.idleAmplitudeX, p.targetX],
               y: [p.targetY, p.targetY + p.idleAmplitudeY, p.targetY],
-              opacity: p.targetOpacity, // Changed from array to static targetOpacity
+              opacity: p.targetOpacity,
               scale: 1,
             }
           }
