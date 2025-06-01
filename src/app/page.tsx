@@ -59,19 +59,19 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center bg-background text-foreground w-full">
       <section 
         ref={heroRef} 
-        className="h-screen w-full flex flex-col items-center justify-center relative p-4 overflow-hidden" // Added overflow-hidden
+        className="h-screen w-full flex flex-col items-center justify-center relative p-4 overflow-hidden"
       >
         <FloatingParticles />
         <motion.div 
-          className="relative z-10 text-center flex flex-col items-center" // Ensure text is above particles
-          initial={{ opacity: 1 }} // Start visible
-          animate={{ opacity: isDissolving ? 0 : 1 }} // Fade out when isDissolving is true
+          className="relative z-10 text-center flex flex-col items-center" 
+          initial={{ opacity: 1 }} 
+          animate={{ opacity: isDissolving ? 0 : 1 }} 
           transition={{ duration: 0.5 }}
         >
           <motion.h1 
             className="font-headline mb-4 md:mb-6 text-accent text-shadow-hero-title"
             style={{ 
-              fontSize: 'clamp(2.5rem, 8vw, 5rem)', // ~8vw mobile, ~4vw desktop
+              fontSize: 'clamp(2.5rem, 8vw, 5rem)', 
             }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -82,11 +82,11 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body mb-2 md:mb-3 text-accent text-shadow-hero-subtitle"
             style={{ 
-              fontSize: 'clamp(1rem, 4vw, 1.75rem)', // ~4vw mobile, ~2vw desktop
+              fontSize: 'clamp(1rem, 4vw, 1.75rem)', 
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.8 + 0.3 }} // After title (0.8s) + 0.3s
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.8 + 0.3 }} 
           >
             Explorando Novos Limites
           </motion.p>
@@ -97,7 +97,7 @@ export default function Home() {
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.8 + 0.3 + 0.2 }} // After subtitle1 (0.3s+0.6s) + 0.2s
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.8 + 0.3 + 0.2 }} 
           >
             Inovação em cada detalhe
           </motion.p>
@@ -117,5 +117,4 @@ export default function Home() {
     </main>
   );
 }
-
     

@@ -34,7 +34,7 @@ const FAR_PARTICLE_SPEED_MAX = 0.17;  // px per frame, approx 10px/s at 60fps
 const NEAR_PARTICLE_OPACITY = 0.7;
 const FAR_PARTICLE_OPACITY = 0.4;
 const MOUSE_REPEL_RADIUS = 100;
-const REPEL_STRENGTH = 0.3; // Adjusted for "slight" repulsion
+const REPEL_STRENGTH = 0.1; // Reduced for "slight" repulsion from 0.3
 const OPACITY_ON_REPEL = 0.2;
 const REPEL_DURATION = 600; // ms
 const INITIAL_FADE_IN_DURATION = 1000; // ms
@@ -142,7 +142,7 @@ const FloatingParticles: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const animate = (timestamp: number) => {
+    const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const now = Date.now();
       const initialElapsedTime = now - pageLoadTime.current;
@@ -152,12 +152,15 @@ const FloatingParticles: React.FC = () => {
         if (initialElapsedTime < INITIAL_FADE_IN_DURATION) {
           particle.currentOpacity = (initialElapsedTime / INITIAL_FADE_IN_DURATION) * particle.targetOpacity;
         } else {
-          particle.opacity = particle.targetOpacity; // Ensure base opacity is set after initial fade
+           // Ensure base opacity is set after initial fade, only if not currently repelling
+          if (!particle.isRepelling) {
+            particle.currentOpacity = particle.targetOpacity;
+          }
         }
 
-        // Mouse interaction
-        let dx = particle.x, dy = particle.y; // Keep original position for drawing if not repelled
-
+        let tempX = particle.x;
+        let tempY = particle.y;
+        
         if (mouse.current.x !== null && mouse.current.y !== null) {
           const dxMouse = particle.x - mouse.current.x;
           const dyMouse = particle.y - mouse.current.y;
@@ -166,54 +169,56 @@ const FloatingParticles: React.FC = () => {
           if (distanceMouse < MOUSE_REPEL_RADIUS) {
             if (!particle.isRepelling) {
               particle.isRepelling = true;
-              particle.repelEndTime = now + REPEL_DURATION;
+              // Store the target opacity before changing it
+              particle.originalTargetOpacity = particle.targetOpacity; 
+              particle.targetOpacity = OPACITY_ON_REPEL; // Set target for repel phase
             }
+            particle.repelEndTime = now + REPEL_DURATION; // Keep extending repel time while mouse is near
+
             const repelFactor = (MOUSE_REPEL_RADIUS - distanceMouse) / MOUSE_REPEL_RADIUS;
             const forceX = (dxMouse / distanceMouse) * repelFactor * REPEL_STRENGTH;
             const forceY = (dyMouse / distanceMouse) * repelFactor * REPEL_STRENGTH;
-            dx += forceX;
-            dy += forceY;
+            
+            // Apply repel force to a temporary position for this frame
+            tempX += forceX * 5; // Multiplier to make repulsion more visible
+            tempY += forceY * 5;
+
           }
         }
 
         if (particle.isRepelling) {
-          const timeSinceRepelEnd = particle.repelEndTime - now;
-          if (timeSinceRepelEnd > 0) {
-            // Currently repelling and opacity is low
-            const progress = timeSinceRepelEnd / REPEL_DURATION; // 1 when starts, 0 when ends
-            particle.currentOpacity = particle.originalTargetOpacity - (particle.originalTargetOpacity - OPACITY_ON_REPEL) * progress;
+          if (now < particle.repelEndTime) {
+            // Smoothly transition to OPACITY_ON_REPEL
+            if (particle.currentOpacity > OPACITY_ON_REPEL) {
+              particle.currentOpacity -= (particle.currentOpacity - OPACITY_ON_REPEL) * 0.1; // Adjust 0.1 for speed
+            } else if (particle.currentOpacity < OPACITY_ON_REPEL) {
+               particle.currentOpacity += (OPACITY_ON_REPEL - particle.currentOpacity) * 0.1;
+            }
+             if (Math.abs(particle.currentOpacity - OPACITY_ON_REPEL) < 0.01) {
+                particle.currentOpacity = OPACITY_ON_REPEL;
+            }
 
-          } else {
-            // Repel time ended, smoothly transition opacity back
+          } else { // Repel time ended
             particle.isRepelling = false;
-            // The opacity will naturally revert in the next block if not interacting
+            particle.targetOpacity = particle.originalTargetOpacity; // Restore original target opacity
           }
         }
         
+        // If not repelling and initial fade is done, smoothly transition to its targetOpacity
         if (!particle.isRepelling && initialElapsedTime >= INITIAL_FADE_IN_DURATION) {
-           // Smoothly transition to targetOpacity if not repelling and initial fade is done
             if (particle.currentOpacity < particle.targetOpacity) {
-                particle.currentOpacity += (particle.targetOpacity - particle.currentOpacity) * 0.05; // Adjust 0.05 for speed of revert
+                particle.currentOpacity += (particle.targetOpacity - particle.currentOpacity) * 0.05; 
             } else if (particle.currentOpacity > particle.targetOpacity) {
                 particle.currentOpacity -= (particle.currentOpacity - particle.targetOpacity) * 0.05;
             }
-             // Clamp opacity
             if (Math.abs(particle.currentOpacity - particle.targetOpacity) < 0.01) {
                 particle.currentOpacity = particle.targetOpacity;
             }
         }
 
-
-        // Update particle position for normal drift (only apply if not being significantly repelled by new logic)
-        // The repulsion is now additive to the current position for that frame.
-        // The base movement should always happen.
+        // Update base particle position
         particle.x += particle.speedX;
         particle.y += particle.speedY;
-
-        // If repelled, dx/dy contains the new temp position for this frame
-        const drawX = particle.isRepelling ? dx : particle.x;
-        const drawY = particle.isRepelling ? dy : particle.y;
-
 
         // Wrap around logic for base position
         if (particle.x > canvas.width + particle.size) particle.x = -particle.size;
@@ -221,9 +226,9 @@ const FloatingParticles: React.FC = () => {
         if (particle.y > canvas.height + particle.size) particle.y = -particle.size;
         else if (particle.y < -particle.size) particle.y = canvas.height + particle.size;
         
-        // Draw particle
+        // Draw particle at its current or temporarily repelled position
         ctx.beginPath();
-        ctx.arc(drawX, drawY, particle.size, 0, Math.PI * 2);
+        ctx.arc(tempX, tempY, particle.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${PARTICLE_COLOR_RGB}, ${particle.currentOpacity})`;
         ctx.fill();
       });
@@ -231,7 +236,7 @@ const FloatingParticles: React.FC = () => {
       animationFrameId.current = requestAnimationFrame(animate);
     };
 
-    animate(0); // Start animation with a timestamp
+    animate(); 
 
     return () => {
       if (animationFrameId.current) {
@@ -250,5 +255,4 @@ const FloatingParticles: React.FC = () => {
 };
 
 export default FloatingParticles;
-
     
