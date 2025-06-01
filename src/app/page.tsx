@@ -40,7 +40,7 @@ export default function Home() {
       <section ref={heroRef} className="h-screen w-full flex flex-col items-center justify-center relative p-4">
         <DynamicHead isDissolving={isDissolving} />
         <motion.div 
-          className="absolute text-center z-10 pointer-events-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-4 text-center z-10 pointer-events-none"
           initial={{ opacity: 1 }}
           animate={{ opacity: isDissolving ? 0 : 1 }}
           transition={{ duration: 0.5 }}
