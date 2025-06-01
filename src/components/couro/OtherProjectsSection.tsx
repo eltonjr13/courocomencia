@@ -7,22 +7,22 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 
 const projects = [
   {
-    title: "Diário de Conexão Espiritual",
-    description: "Produto digital para mulheres cristãs, com mais de 400 páginas devocionais interativas.",
+    title: "AI-Assist ChatBot",
+    description: "Chatbot inteligente baseado em IA para atendimento, respondendo dúvidas técnicas e gerando conteúdos automáticos como e-mails e descrições de produtos.",
     image: "https://placehold.co/600x400.png",
-    aiHint: "journal app mockup"
+    aiHint: "chatbot interface"
   },
   {
-    title: "SpeedFlix",
-    description: "Landing page e branding para plataforma de IPTV com experiência rápida e fluida.",
+    title: "CNPJ Insights",
+    description: "Ferramenta que busca dados de empresas pelo CNPJ, exibindo informações como nome, sócios, contatos e ramo de atuação.",
     image: "https://placehold.co/600x400.png",
-    aiHint: "streaming service interface"
+    aiHint: "data analytics"
   },
   {
-    title: "Projeto Futuro",
-    description: "Explorando novas fronteiras da tecnologia e design para criar impacto.",
+    title: "Maps for All",
+    description: "Aplicativo que, ao informar um nicho e uma cidade, retorna empresas do segmento com dados de contato, sócios e localização.",
     image: "https://placehold.co/600x400.png",
-    aiHint: "abstract tech design"
+    aiHint: "map application"
   }
 ];
 
