@@ -11,7 +11,7 @@ interface Particle {
   speedX: number;
   speedY: number;
   baseOpacity: number;
-  currentOpacity: number; // Opacity used for drawing, includes twinkle, initial fade, hover, scroll
+  currentOpacity: number; 
   isNear: boolean;
   
   twinkleOffset: number;
@@ -36,8 +36,8 @@ const LINE_BASE_OPACITY = 0.4;
 const CONNECT_DISTANCE = 80;
 const PARTICLE_STROKE_WIDTH = 1;
 
-const NEAR_PARTICLE_SIZE = 8; // Diameter
-const FAR_PARTICLE_SIZE = 4;  // Diameter
+const NEAR_PARTICLE_SIZE = 8; 
+const FAR_PARTICLE_SIZE = 4;  
 
 const NEAR_PARTICLE_SPEED_PX_S_MIN = 6;
 const NEAR_PARTICLE_SPEED_PX_S_MAX = 10;
@@ -47,26 +47,27 @@ const FAR_PARTICLE_SPEED_PX_S_MAX = 4;
 const MOUSE_REPEL_RADIUS = 80;
 const REPEL_STRENGTH = 0.03; 
 const OPACITY_ON_REPEL = 1.0; 
-const REPEL_EFFECT_DURATION = 500; // ms for opacity change
-const INITIAL_FADE_IN_DURATION = 1000; // ms, changed from 1200
+const REPEL_EFFECT_DURATION = 500; 
+const INITIAL_FADE_IN_DURATION = 1000; 
 const MOBILE_BREAKPOINT = 768;
 
 const pxPerSecondToPxPerFrame = (px_s: number) => px_s / 60;
 
-interface FloatingParticlesProps {
-  scrollFade?: number; // Opacity factor from scrolling (0.5 to 1.0)
-}
-
-const FloatingParticles: React.FC<FloatingParticlesProps> = ({ scrollFade = 1.0 }) => {
+const FloatingParticles: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesArray = useRef<Particle[]>([]);
   const mouse = useRef<{ x: number | null; y: number | null }>({ x: null, y: null });
   const animationFrameId = useRef<number>();
   const pageLoadTime = useRef<number>(Date.now());
   const [isClient, setIsClient] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const createParticle = useCallback((isNear: boolean, canvasWidth: number, canvasHeight: number, id: number): Particle => {
@@ -104,7 +105,7 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({ scrollFade = 1.0 
   const initParticles = useCallback(() => {
     if (!canvasRef.current || !isClient) return;
     const canvas = canvasRef.current;
-    const { width, height } = canvas.getBoundingClientRect();
+    const { width, height } = canvas.getBoundingClientRect(); // Use getBoundingClientRect for initial size
     canvas.width = width;
     canvas.height = height;
     
@@ -129,38 +130,49 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({ scrollFade = 1.0 
 
   useEffect(() => {
     if (!isClient) return;
-    initParticles();
+    
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    const handleResize = () => {
-      initParticles();
-    };
-    window.addEventListener('resize', handleResize);
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        const {width, height} = entry.contentRect;
+        canvas.width = width;
+        canvas.height = height;
+        // Re-init particles on resize might be too much, let them adjust or just redraw
+        // For simplicity, we'll let them continue, they will wrap around.
+        // If re-init is desired, call initParticles() here, but be mindful of performance.
+      }
+    });
+    resizeObserver.observe(canvas);
+    initParticles(); // Initial setup based on current canvas size
+
 
     const handleMouseMove = (event: MouseEvent) => {
-      if (canvasRef.current) {
-        const rect = canvasRef.current.getBoundingClientRect();
-        mouse.current.x = event.clientX - rect.left;
-        mouse.current.y = event.clientY - rect.top;
-      }
+      if (isMobile || !canvasRef.current) return; // Disable hover on mobile
+      const rect = canvasRef.current.getBoundingClientRect();
+      mouse.current.x = event.clientX - rect.left;
+      mouse.current.y = event.clientY - rect.top;
     };
     const handleMouseLeave = () => {
+      if (isMobile) return;
       mouse.current.x = null;
       mouse.current.y = null;
     };
 
-    const currentCanvas = canvasRef.current;
-    currentCanvas?.addEventListener('mousemove', handleMouseMove);
-    currentCanvas?.addEventListener('mouseleave', handleMouseLeave);
+    // Add listeners to window as canvas is pointer-events: none
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseleave', handleMouseLeave); // or mouseout on document.body
     
     return () => {
-      window.removeEventListener('resize', handleResize);
-      currentCanvas?.removeEventListener('mousemove', handleMouseMove);
-      currentCanvas?.removeEventListener('mouseleave', handleMouseLeave);
+      resizeObserver.unobserve(canvas);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseleave', handleMouseLeave);
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [isClient, initParticles]);
+  }, [isClient, initParticles, isMobile]);
 
   useEffect(() => {
     if (!isClient || !canvasRef.current) return;
@@ -170,13 +182,14 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({ scrollFade = 1.0 
     if (!ctx) return;
 
     const animate = () => {
+      if (!canvasRef.current) return; // Ensure canvas still exists
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const now = Date.now();
       const initialElapsedTime = now - pageLoadTime.current;
 
       // Draw connecting lines first
       ctx.lineWidth = PARTICLE_STROKE_WIDTH;
-      ctx.filter = 'blur(0.5px)'; // Apply blur only to lines
+      ctx.filter = 'blur(0.5px)'; 
       for (let i = 0; i < particlesArray.current.length; i++) {
         for (let j = i + 1; j < particlesArray.current.length; j++) {
           const p1 = particlesArray.current[i];
@@ -186,10 +199,9 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({ scrollFade = 1.0 
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < CONNECT_DISTANCE) {
-            const lineOpacityFactor = (1 - distance / CONNECT_DISTANCE); // Fade line as distance increases
-            const finalLineOpacity = Math.max(0, Math.min(1, LINE_BASE_OPACITY * lineOpacityFactor * scrollFade));
+            const lineOpacityFactor = (1 - distance / CONNECT_DISTANCE);
+            const finalLineOpacity = Math.max(0, Math.min(1, LINE_BASE_OPACITY * lineOpacityFactor));
             
-            // Consider initial fade-in for lines as well
             let effectiveLineOpacity = 0;
             if (initialElapsedTime < INITIAL_FADE_IN_DURATION) {
                  effectiveLineOpacity = (initialElapsedTime / INITIAL_FADE_IN_DURATION) * finalLineOpacity;
@@ -207,20 +219,18 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({ scrollFade = 1.0 
           }
         }
       }
-      ctx.filter = 'none'; // Reset filter
+      ctx.filter = 'none'; 
 
       // Draw particles
       particlesArray.current.forEach(particle => {
         let interactiveOpacityTarget = particle.baseOpacity;
 
-        // Twinkle effect calculation
-        if (!particle.isNear) { // Near particles are full opacity, no twinkle needed
-            const twinkleAmplitude = Math.max(0, 0.9 - particle.baseOpacity);
+        if (!particle.isNear) { 
+            const twinkleAmplitude = Math.max(0, 0.9 - particle.baseOpacity); 
             const sineValue = Math.sin(now / particle.twinkleDuration * (2 * Math.PI) + particle.twinkleOffset);
             interactiveOpacityTarget = particle.baseOpacity + twinkleAmplitude * (sineValue * 0.5 + 0.5);
         }
         
-        // Initial fade-in
         let finalOpacity = 0;
         if (initialElapsedTime < INITIAL_FADE_IN_DURATION) {
           finalOpacity = (initialElapsedTime / INITIAL_FADE_IN_DURATION) * interactiveOpacityTarget;
@@ -231,8 +241,7 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({ scrollFade = 1.0 
         let tempX = particle.x;
         let tempY = particle.y;
         
-        // Mouse interaction
-        if (mouse.current.x !== null && mouse.current.y !== null) {
+        if (!isMobile && mouse.current.x !== null && mouse.current.y !== null) {
           const dxMouse = particle.x - mouse.current.x;
           const dyMouse = particle.y - mouse.current.y;
           const distanceMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
@@ -240,7 +249,7 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({ scrollFade = 1.0 
           if (distanceMouse < MOUSE_REPEL_RADIUS) {
             if (!particle.isRepelling) {
               particle.isRepelling = true;
-              particle.originalTargetOpacityBeforeRepel = finalOpacity;
+              particle.originalTargetOpacityBeforeRepel = finalOpacity; 
             }
             particle.repelEndTime = now + REPEL_EFFECT_DURATION; 
 
@@ -248,7 +257,7 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({ scrollFade = 1.0 
             const forceX = (dxMouse / distanceMouse) * repelFactor * REPEL_STRENGTH;
             const forceY = (dyMouse / distanceMouse) * repelFactor * REPEL_STRENGTH;
             
-            tempX += forceX * 50;
+            tempX += forceX * 50; 
             tempY += forceY * 50;
             finalOpacity = OPACITY_ON_REPEL;
 
@@ -277,11 +286,11 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({ scrollFade = 1.0 
         if (particle.y > canvas.height + particle.size) particle.y = -particle.size;
         else if (particle.y < -particle.size) particle.y = canvas.height + particle.size;
         
-        const opacityToDraw = Math.max(0, Math.min(1, particle.currentOpacity * scrollFade));
+        const opacityToDraw = Math.max(0, Math.min(1, particle.currentOpacity)); 
 
         if (opacityToDraw > 0) {
             ctx.beginPath();
-            ctx.arc(tempX, tempY, particle.size / 2, 0, Math.PI * 2); // Use diameter for size
+            ctx.arc(tempX, tempY, particle.size / 2, 0, Math.PI * 2); 
             ctx.strokeStyle = `rgba(${ACCENT_COLOR_RGB_STRING}, ${opacityToDraw})`;
             ctx.lineWidth = PARTICLE_STROKE_WIDTH;
             ctx.stroke();
@@ -298,13 +307,13 @@ const FloatingParticles: React.FC<FloatingParticlesProps> = ({ scrollFade = 1.0 
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [isClient, createParticle, initParticles, scrollFade]);
+  }, [isClient, createParticle, initParticles, isMobile]);
 
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full z-[1] pointer-events-none" // Removed blur-[1px]
+      className="fixed inset-0 w-full h-full z-[1] pointer-events-none" 
     />
   );
 };

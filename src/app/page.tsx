@@ -2,13 +2,11 @@
 "use client";
 import ProjectShowcaseSection from "@/components/couro/ProjectShowcaseSection";
 import PortfolioFooter from "@/components/couro/PortfolioFooter";
-import FloatingParticles from "@/components/hero/FloatingParticles";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
-  const [isTextFadingOut, setIsTextFadingOut] = useState(false); // For text fade 1 to 0
-  const [particleScrollFade, setParticleScrollFade] = useState(1.0); // For particle fade 1 to 0.5
+  const [isTextFadingOut, setIsTextFadingOut] = useState(false); 
   const [showProjects, setShowProjects] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const [heroHeight, setHeroHeight] = useState(0);
@@ -32,26 +30,13 @@ export default function Home() {
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (heroHeight > 0) {
       const scrollThresholdStartFade = heroHeight * 0.8;
-      const scrollThresholdEndFade = heroHeight; // End of hero section
-
-      // Text fade out (1.0 to 0.0) from 80% to 100%
+      
       if (latest > scrollThresholdStartFade) {
         setIsTextFadingOut(true);
       } else {
         setIsTextFadingOut(false);
       }
-
-      // Particle fade (1.0 to 0.5) from 80% to 100%
-      if (latest >= scrollThresholdStartFade && latest <= scrollThresholdEndFade) {
-        const progress = (latest - scrollThresholdStartFade) / (scrollThresholdEndFade - scrollThresholdStartFade);
-        setParticleScrollFade(1.0 - progress * 0.5); // Fades from 1.0 down to 0.5
-      } else if (latest < scrollThresholdStartFade) {
-        setParticleScrollFade(1.0);
-      } else { // latest > scrollThresholdEndFade
-        setParticleScrollFade(0.5);
-      }
       
-      // Show projects when 80% of hero is scrolled (can adjust if needed)
       if (latest > heroHeight * 0.8) {
         setShowProjects(true);
       } else {
@@ -68,17 +53,17 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-background text-foreground w-full">
+    <main className="flex min-h-screen flex-col items-center bg-transparent text-foreground w-full relative z-[2]">
       <section 
         ref={heroRef} 
         className="h-screen w-full flex flex-col items-center justify-center relative p-4 overflow-hidden"
       >
-        <FloatingParticles scrollFade={particleScrollFade} />
+        {/* FloatingParticles is now global, rendered from layout.tsx */}
         <motion.div 
           className="relative z-10 text-center flex flex-col items-center" 
           initial={{ opacity: 1 }} 
-          animate={{ opacity: isTextFadingOut ? 0 : 1 }} // Text fades to 0
-          transition={{ duration: 0.5 }} // Duration for text fade out
+          animate={{ opacity: isTextFadingOut ? 0 : 1 }} 
+          transition={{ duration: 0.5 }} 
         >
           <motion.h1 
             className="font-headline mb-4 md:mb-6 text-accent text-shadow-hero-title"
