@@ -6,7 +6,7 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
-  const [isTextFadingOut, setIsTextFadingOut] = useState(false); 
+  const [isTextFadingOut, setIsTextFadingOut] = useState(false);
   const [showProjects, setShowProjects] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const [heroHeight, setHeroHeight] = useState(0);
@@ -59,7 +59,7 @@ export default function Home() {
         className="h-screen w-full flex flex-col items-center justify-center relative p-4 overflow-hidden"
       >
         <motion.div 
-          className="relative z-10 text-center flex flex-col items-center" 
+          className="relative z-10 text-center flex flex-col items-center hero-text-pulse-container" 
           initial={{ opacity: 1 }} 
           animate={{ opacity: isTextFadingOut ? 0 : 1 }} 
           transition={{ duration: 0.5 }} 
@@ -68,7 +68,7 @@ export default function Home() {
             className="font-headline mb-4 md:mb-6"
             style={{ 
               fontSize: 'clamp(2.5rem, 8vw, 5rem)',
-              color: '#FFFFFF'
+              color: '#FFFFFF',
             }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -79,8 +79,8 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body mb-2 md:mb-3"
             style={{ 
-              fontSize: 'clamp(0.72rem, 2.89vw, 1.27rem)',
-              color: '#FFFFFF'
+              fontSize: 'clamp(0.61rem, 2.45vw, 1.08rem)', // Approx 15% smaller than original 0.72rem vw base
+              color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -91,8 +91,8 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body"
             style={{ 
-              fontSize: 'clamp(0.54rem, 2.17vw, 0.95rem)',
-              color: '#FFFFFF'
+              fontSize: 'clamp(0.46rem, 1.84vw, 0.81rem)', // Approx 25% smaller than the new first subtitle's 0.61rem vw base
+              color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
