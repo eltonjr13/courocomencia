@@ -36,16 +36,7 @@ const SharkFitHighlight = () => {
     const playerElementId = 'youtube-player-sharkfit';
 
     const onPlayerStateChange = (event: any) => { 
-      const glowContainer = playerWrapperRef.current?.parentElement;
-      if (glowContainer && window.YT) {
-        if (event.data === window.YT.PlayerState.PLAYING) {
-          glowContainer.classList.remove('glow-default');
-          glowContainer.classList.add('glow-bright');
-        } else if (event.data === window.YT.PlayerState.PAUSED || event.data === window.YT.PlayerState.ENDED) {
-          glowContainer.classList.remove('glow-bright');
-          glowContainer.classList.add('glow-default');
-        }
-      }
+      // Glow logic removed
     };
 
     const onPlayerReady = (event: any) => { 
@@ -119,14 +110,12 @@ const SharkFitHighlight = () => {
           transition={{ duration: 0.5 }}
           className="w-full max-w-3xl mx-auto" 
         >
-          <div className="video-glow-wrapper glow-default"> {/* New wrapper for animated glow */}
-            <div
-              ref={playerWrapperRef}
-              className="relative rounded-lg overflow-hidden" // Removed glow-default here
-              style={{ paddingBottom: "56.25%", height: 0 }} // 16:9 Aspect Ratio container
-            >
-              <div id="youtube-player-sharkfit" className="absolute top-0 left-0 w-full h-full"></div>
-            </div>
+          <div
+            ref={playerWrapperRef}
+            className="relative rounded-lg overflow-hidden shadow-lg border border-border/50" 
+            style={{ paddingBottom: "56.25%", height: 0 }} // 16:9 Aspect Ratio container
+          >
+            <div id="youtube-player-sharkfit" className="absolute top-0 left-0 w-full h-full"></div>
           </div>
         </motion.div>
 

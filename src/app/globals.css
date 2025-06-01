@@ -107,36 +107,4 @@ body {
   .text-shadow-subtle-hero {
     text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
   }
-
-  @keyframes neonSpin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-
-  .video-glow-wrapper {
-    position: relative;
-    border-radius: var(--radius); /* Matches .rounded-lg */
-  }
-
-  .video-glow-wrapper::before {
-    content: "";
-    position: absolute;
-    top: -8px; 
-    left: -8px;
-    right: -8px;
-    bottom: -8px;
-    border-radius: calc(var(--radius) + 8px); /* Adjusted for the inset */
-    z-index: -1; 
-    animation: neonSpin 20s linear infinite;
-    transition: box-shadow 0.3s ease-in-out;
-    box-shadow: none; /* Default, actual shadow set by .glow-default or .glow-bright */
-  }
-
-  .glow-default.video-glow-wrapper::before {
-    box-shadow: 0 0 15px hsl(var(--accent)/0.4), 0 0 30px hsl(var(--accent)/0.25), 0 0 50px hsl(var(--accent)/0.1);
-  }
-
-  .glow-bright.video-glow-wrapper::before {
-    box-shadow: 0 0 25px hsl(var(--accent)/0.7), 0 0 45px hsl(var(--accent)/0.4), 0 0 70px hsl(var(--accent)/0.2);
-  }
 }
