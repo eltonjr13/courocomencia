@@ -11,6 +11,14 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
+  useEffect(() => {
+    document.body.classList.add('no-scroll');
+    // Cleanup function to remove no-scroll if component unmounts for any reason
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
+  }, []); // Runs once on mount and cleanup on unmount
+
   const handleDismiss = () => {
     if (isFadingOut) return;
     setIsFadingOut(true);
@@ -19,6 +27,7 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
   useEffect(() => {
     if (isFadingOut) {
       const timer = setTimeout(() => {
+        document.body.classList.remove('no-scroll'); // Remove scroll lock before finishing
         onSplashFinished();
         setIsVisible(false); // Allow parent to unmount, or hide if not unmounted
       }, 600); // Match CSS animation duration

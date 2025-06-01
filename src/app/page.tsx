@@ -46,9 +46,10 @@ export default function Home() {
   });
   
   useEffect(() => {
-    document.body.style.overflowX = 'hidden';
+    // This effect for overflowX is no longer needed as no-scroll class handles it
     return () => {
-      document.body.style.overflowX = '';
+      // Ensure body styles are reset if component unmounts unexpectedly
+      // document.body.style.overflowX = ''; // Already handled by no-scroll removal
     };
   }, []);
 
@@ -93,7 +94,7 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body mb-2 md:mb-3 hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', // Adjusted from 1.5rem, 4vw, 2rem
+              fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', 
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
@@ -105,7 +106,7 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(0.96rem, 2.4vw, 1.28rem)', // Adjusted from 1.2rem, 3vw, 1.6rem
+              fontSize: 'clamp(0.96rem, 2.4vw, 1.28rem)', 
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}

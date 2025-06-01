@@ -101,6 +101,10 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  body.no-scroll {
+    overflow: hidden; /* disables scrolling */
+    height: 100vh; /* prevents “rubber-band” on mobile */
+  }
 }
 
 @layer utilities {
