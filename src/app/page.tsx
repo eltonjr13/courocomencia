@@ -68,7 +68,7 @@ export default function Home() {
             className="font-headline mb-4 md:mb-6"
             style={{ 
               fontSize: 'clamp(2.5rem, 8vw, 5rem)', 
-              background: 'linear-gradient(180deg, #FFFFFF 0%, #64B5F6 50%, #FFFFFF 100%)',
+              background: 'linear-gradient(90deg, #FFFFFF 0%, rgba(100,181,246,0.2) 50%, #FFFFFF 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -84,7 +84,7 @@ export default function Home() {
             className="font-semibold font-body mb-2 md:mb-3"
             style={{ 
               fontSize: 'clamp(0.72rem, 2.89vw, 1.27rem)', 
-              background: 'linear-gradient(180deg, #FFFFFF 0%, rgba(100,181,246,0.5) 50%, #FFFFFF 100%)',
+              background: 'linear-gradient(90deg, #FFFFFF 0%, rgba(100,181,246,0.15) 50%, #FFFFFF 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -100,7 +100,7 @@ export default function Home() {
             className="font-semibold font-body"
             style={{ 
               fontSize: 'clamp(0.54rem, 2.17vw, 0.95rem)', 
-              background: 'linear-gradient(180deg, #FFFFFF 0%, rgba(100,181,246,0.3) 50%, #FFFFFF 100%)',
+              background: 'linear-gradient(90deg, #FFFFFF 0%, rgba(100,181,246,0.1) 50%, #FFFFFF 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
