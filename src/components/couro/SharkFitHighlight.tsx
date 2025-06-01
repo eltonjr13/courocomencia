@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react";
 declare global {
   interface Window {
     YT?: {
-      Player: any; // Replace 'any' with more specific types if available
+      Player: any; 
       PlayerState: {
         ENDED: number;
         PLAYING: number;
@@ -35,37 +35,37 @@ const SharkFitHighlight = () => {
   useEffect(() => {
     const playerElementId = 'youtube-player-sharkfit';
 
-    const onPlayerStateChange = (event: any) => { // YT.OnStateChangeEvent
-      if (playerWrapperRef.current && window.YT) {
+    const onPlayerStateChange = (event: any) => { 
+      const glowContainer = playerWrapperRef.current?.parentElement;
+      if (glowContainer && window.YT) {
         if (event.data === window.YT.PlayerState.PLAYING) {
-          playerWrapperRef.current.classList.remove('glow-default');
-          playerWrapperRef.current.classList.add('glow-bright');
+          glowContainer.classList.remove('glow-default');
+          glowContainer.classList.add('glow-bright');
         } else if (event.data === window.YT.PlayerState.PAUSED || event.data === window.YT.PlayerState.ENDED) {
-          playerWrapperRef.current.classList.remove('glow-bright');
-          playerWrapperRef.current.classList.add('glow-default');
+          glowContainer.classList.remove('glow-bright');
+          glowContainer.classList.add('glow-default');
         }
       }
     };
 
-    const onPlayerReady = (event: any) => { // YT.OnPlayerReadyEvent
-      // Player is ready. You could, for example, play the video:
-      // event.target.playVideo();
+    const onPlayerReady = (event: any) => { 
+      // Player is ready
     };
     
     const createPlayer = () => {
-      if (!document.getElementById(playerElementId) || playerRef.current) return; 
+      if (!document.getElementById(playerElementId) || playerRef.current || !playerWrapperRef.current) return; 
       
       playerRef.current = new window.YT.Player(playerElementId, {
         videoId: 'dtHyBOisCr8',
         playerVars: {
-          rel: 0,             // No related videos
-          modestbranding: 1,  // Minimal YouTube logo
-          controls: 1,        // Show standard controls (includes play/pause, volume, progress)
-          iv_load_policy: 3,  // Disable annotations
-          fs: 1,              // Allow fullscreen
-          showinfo: 0,        // Hide video title and uploader before video starts
-          autohide: 1,        // Deprecated, but often used with showinfo=0
-          playsinline: 1,     // Play inline on iOS
+          rel: 0,            
+          modestbranding: 1,  
+          controls: 1,        
+          iv_load_policy: 3,  
+          fs: 1,             
+          showinfo: 0,       
+          autohide: 1,        
+          playsinline: 1,     
         },
         events: {
           onReady: onPlayerReady,
@@ -86,14 +86,10 @@ const SharkFitHighlight = () => {
         document.head.appendChild(tag);
       }
       
-      // It's crucial that onYouTubeIframeAPIReady is a global function.
-      // If this component re-renders, we don't want to redefine it if it's already set
-      // and potentially queuing other players.
-      // A simple approach:
       const existingApiReady = window.onYouTubeIframeAPIReady;
       window.onYouTubeIframeAPIReady = () => {
         if (existingApiReady) {
-          existingApiReady(); // Call previous if it exists
+          existingApiReady(); 
         }
         createPlayer();
       };
@@ -104,8 +100,6 @@ const SharkFitHighlight = () => {
         playerRef.current.destroy();
         playerRef.current = null;
       }
-      // More complex cleanup of onYouTubeIframeAPIReady might be needed
-      // in a multi-player environment, but for a single main player this is often sufficient.
     };
   }, []);
 
@@ -125,12 +119,14 @@ const SharkFitHighlight = () => {
           transition={{ duration: 0.5 }}
           className="w-full max-w-3xl mx-auto" 
         >
-          <div 
-            ref={playerWrapperRef}
-            className="relative rounded-lg overflow-hidden glow-default"
-            style={{ paddingBottom: "56.25%", height: 0 }} // 16:9 Aspect Ratio container
-          >
-            <div id="youtube-player-sharkfit" className="absolute top-0 left-0 w-full h-full"></div>
+          <div className="video-glow-wrapper glow-default"> {/* New wrapper for animated glow */}
+            <div
+              ref={playerWrapperRef}
+              className="relative rounded-lg overflow-hidden" // Removed glow-default here
+              style={{ paddingBottom: "56.25%", height: 0 }} // 16:9 Aspect Ratio container
+            >
+              <div id="youtube-player-sharkfit" className="absolute top-0 left-0 w-full h-full"></div>
+            </div>
           </div>
         </motion.div>
 
@@ -145,7 +141,7 @@ const SharkFitHighlight = () => {
             SharkFit
           </h2>
           <p className="text-muted-foreground mb-6 text-lg max-w-xl mx-auto">
-            Aplicativo fitness inteligente para evolução diária.
+          Aplicativo de alta performance inteligente para evolução diária.
           </p>
           <ul className="space-y-3 mb-8 inline-block text-left">
             {bulletPoints.map((point, index) => (
