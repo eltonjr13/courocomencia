@@ -20,9 +20,12 @@ interface Particle {
   repelEndTime: number;
 }
 
-const PARTICLE_COLOR_RGB = "68, 68, 68"; // #444444
-const NUM_NEAR_PARTICLES = 20;
-const NUM_FAR_PARTICLES = 110; // Total 130 particles
+const PARTICLE_COLOR_RGB = "255, 255, 255"; // Pure White
+const DESKTOP_NUM_NEAR_PARTICLES = 20;
+const DESKTOP_NUM_FAR_PARTICLES = 110;
+const MOBILE_NUM_NEAR_PARTICLES = 15;
+const MOBILE_NUM_FAR_PARTICLES = 65;
+
 const NEAR_PARTICLE_SIZE_MIN = 10;
 const NEAR_PARTICLE_SIZE_MAX = 12;
 const FAR_PARTICLE_SIZE_MIN = 4;
@@ -31,13 +34,14 @@ const NEAR_PARTICLE_SPEED_MIN = 0.25; // px per frame, approx 15px/s at 60fps
 const NEAR_PARTICLE_SPEED_MAX = 0.33; // px per frame, approx 20px/s at 60fps
 const FAR_PARTICLE_SPEED_MIN = 0.08;  // px per frame, approx 5px/s at 60fps
 const FAR_PARTICLE_SPEED_MAX = 0.17;  // px per frame, approx 10px/s at 60fps
-const NEAR_PARTICLE_OPACITY = 0.7;
-const FAR_PARTICLE_OPACITY = 0.4;
+const NEAR_PARTICLE_OPACITY = 0.8; // Increased opacity
+const FAR_PARTICLE_OPACITY = 0.6;  // Increased opacity
 const MOUSE_REPEL_RADIUS = 100;
-const REPEL_STRENGTH = 0.1; // Reduced for "slight" repulsion from 0.3
+const REPEL_STRENGTH = 0.1; 
 const OPACITY_ON_REPEL = 0.2;
 const REPEL_DURATION = 600; // ms
 const INITIAL_FADE_IN_DURATION = 1000; // ms
+const MOBILE_BREAKPOINT = 768;
 
 const FloatingParticles: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -72,9 +76,9 @@ const FloatingParticles: React.FC = () => {
       size,
       speedX,
       speedY,
-      opacity: 0, // Used for initial fade-in calculation
+      opacity: 0, 
       targetOpacity,
-      currentOpacity: 0, // Actual rendered opacity
+      currentOpacity: 0, 
       isNear,
       originalSpeedX: speedX,
       originalSpeedY: speedY,
@@ -85,21 +89,29 @@ const FloatingParticles: React.FC = () => {
   }, []);
 
   const initParticles = useCallback(() => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current || !isClient) return;
     const canvas = canvasRef.current;
     const { width, height } = canvas.getBoundingClientRect();
     canvas.width = width;
     canvas.height = height;
     
     particlesArray.current = [];
-    for (let i = 0; i < NUM_NEAR_PARTICLES; i++) {
+    let numNear = DESKTOP_NUM_NEAR_PARTICLES;
+    let numFar = DESKTOP_NUM_FAR_PARTICLES;
+
+    if (window.innerWidth < MOBILE_BREAKPOINT) {
+      numNear = MOBILE_NUM_NEAR_PARTICLES;
+      numFar = MOBILE_NUM_FAR_PARTICLES;
+    }
+
+    for (let i = 0; i < numNear; i++) {
       particlesArray.current.push(createParticle(true, canvas.width, canvas.height));
     }
-    for (let i = 0; i < NUM_FAR_PARTICLES; i++) {
+    for (let i = 0; i < numFar; i++) {
       particlesArray.current.push(createParticle(false, canvas.width, canvas.height));
     }
     pageLoadTime.current = Date.now(); 
-  }, [createParticle]);
+  }, [createParticle, isClient]);
 
   useEffect(() => {
     if (!isClient) return;
@@ -122,13 +134,15 @@ const FloatingParticles: React.FC = () => {
       mouse.current.y = null;
     };
 
-    canvasRef.current?.addEventListener('mousemove', handleMouseMove);
-    canvasRef.current?.addEventListener('mouseleave', handleMouseLeave);
+    // Check if canvasRef.current exists before adding event listeners
+    const currentCanvas = canvasRef.current;
+    currentCanvas?.addEventListener('mousemove', handleMouseMove);
+    currentCanvas?.addEventListener('mouseleave', handleMouseLeave);
     
     return () => {
       window.removeEventListener('resize', handleResize);
-      canvasRef.current?.removeEventListener('mousemove', handleMouseMove);
-      canvasRef.current?.removeEventListener('mouseleave', handleMouseLeave);
+      currentCanvas?.removeEventListener('mousemove', handleMouseMove);
+      currentCanvas?.removeEventListener('mouseleave', handleMouseLeave);
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }
@@ -148,11 +162,9 @@ const FloatingParticles: React.FC = () => {
       const initialElapsedTime = now - pageLoadTime.current;
 
       particlesArray.current.forEach(particle => {
-        // Initial fade-in
         if (initialElapsedTime < INITIAL_FADE_IN_DURATION) {
           particle.currentOpacity = (initialElapsedTime / INITIAL_FADE_IN_DURATION) * particle.targetOpacity;
         } else {
-           // Ensure base opacity is set after initial fade, only if not currently repelling
           if (!particle.isRepelling) {
             particle.currentOpacity = particle.targetOpacity;
           }
@@ -169,18 +181,16 @@ const FloatingParticles: React.FC = () => {
           if (distanceMouse < MOUSE_REPEL_RADIUS) {
             if (!particle.isRepelling) {
               particle.isRepelling = true;
-              // Store the target opacity before changing it
               particle.originalTargetOpacity = particle.targetOpacity; 
-              particle.targetOpacity = OPACITY_ON_REPEL; // Set target for repel phase
+              particle.targetOpacity = OPACITY_ON_REPEL; 
             }
-            particle.repelEndTime = now + REPEL_DURATION; // Keep extending repel time while mouse is near
+            particle.repelEndTime = now + REPEL_DURATION; 
 
             const repelFactor = (MOUSE_REPEL_RADIUS - distanceMouse) / MOUSE_REPEL_RADIUS;
             const forceX = (dxMouse / distanceMouse) * repelFactor * REPEL_STRENGTH;
             const forceY = (dyMouse / distanceMouse) * repelFactor * REPEL_STRENGTH;
             
-            // Apply repel force to a temporary position for this frame
-            tempX += forceX * 5; // Multiplier to make repulsion more visible
+            tempX += forceX * 5; 
             tempY += forceY * 5;
 
           }
@@ -188,9 +198,8 @@ const FloatingParticles: React.FC = () => {
 
         if (particle.isRepelling) {
           if (now < particle.repelEndTime) {
-            // Smoothly transition to OPACITY_ON_REPEL
             if (particle.currentOpacity > OPACITY_ON_REPEL) {
-              particle.currentOpacity -= (particle.currentOpacity - OPACITY_ON_REPEL) * 0.1; // Adjust 0.1 for speed
+              particle.currentOpacity -= (particle.currentOpacity - OPACITY_ON_REPEL) * 0.1; 
             } else if (particle.currentOpacity < OPACITY_ON_REPEL) {
                particle.currentOpacity += (OPACITY_ON_REPEL - particle.currentOpacity) * 0.1;
             }
@@ -198,13 +207,12 @@ const FloatingParticles: React.FC = () => {
                 particle.currentOpacity = OPACITY_ON_REPEL;
             }
 
-          } else { // Repel time ended
+          } else { 
             particle.isRepelling = false;
-            particle.targetOpacity = particle.originalTargetOpacity; // Restore original target opacity
+            particle.targetOpacity = particle.originalTargetOpacity; 
           }
         }
         
-        // If not repelling and initial fade is done, smoothly transition to its targetOpacity
         if (!particle.isRepelling && initialElapsedTime >= INITIAL_FADE_IN_DURATION) {
             if (particle.currentOpacity < particle.targetOpacity) {
                 particle.currentOpacity += (particle.targetOpacity - particle.currentOpacity) * 0.05; 
@@ -216,17 +224,14 @@ const FloatingParticles: React.FC = () => {
             }
         }
 
-        // Update base particle position
         particle.x += particle.speedX;
         particle.y += particle.speedY;
 
-        // Wrap around logic for base position
         if (particle.x > canvas.width + particle.size) particle.x = -particle.size;
         else if (particle.x < -particle.size) particle.x = canvas.width + particle.size;
         if (particle.y > canvas.height + particle.size) particle.y = -particle.size;
         else if (particle.y < -particle.size) particle.y = canvas.height + particle.size;
         
-        // Draw particle at its current or temporarily repelled position
         ctx.beginPath();
         ctx.arc(tempX, tempY, particle.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${PARTICLE_COLOR_RGB}, ${particle.currentOpacity})`;
@@ -249,7 +254,7 @@ const FloatingParticles: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full -z-10"
+      className="absolute inset-0 w-full h-full z-[1] pointer-events-none"
     />
   );
 };
