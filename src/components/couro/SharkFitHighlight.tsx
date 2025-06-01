@@ -24,9 +24,9 @@ const SharkFitHighlight = () => {
   };
 
   const bulletPoints = [
-    "Design de interface intuitivo e moderno.",
-    "Experiência de usuário otimizada para engajamento.",
-    "Identidade visual que transmite força e dinamismo.",
+    "Monitoramento nutricional e físico",
+    "Dashboard intuitivo",
+    "Rotina personalizada",
   ];
 
   return (
@@ -38,27 +38,28 @@ const SharkFitHighlight = () => {
       viewport={{ once: true, amount: 0.3 }}
     >
       <Card className="bg-card/80 border-border shadow-xl overflow-hidden">
-        <div className="md:flex">
-          <motion.div className="md:w-1/2" variants={itemVariants}>
+        <div className="flex flex-col">
+          <motion.div variants={itemVariants}>
             <Image
-              src="https://placehold.co/800x600.png"
-              alt="SharkFit Project"
+              src="https://placehold.co/800x450.png"
+              alt="SharkFit Video Preview"
               width={800}
-              height={600}
-              className="object-cover w-full h-64 md:h-full"
-              data-ai-hint="fitness app interface"
+              height={450}
+              className="object-cover w-full h-auto aspect-video rounded-t-lg shadow-lg shadow-accent/30 border border-accent/50"
+              data-ai-hint="fitness app video"
+              priority
             />
           </motion.div>
-          <motion.div className="md:w-1/2 p-6 md:p-10 flex flex-col justify-center" variants={itemVariants}>
+          <motion.div className="p-6 md:p-10 flex flex-col justify-center" variants={itemVariants}>
             <CardContent className="p-0">
               <motion.h2 
                 className="text-3xl md:text-4xl font-headline mb-4 text-primary"
                 variants={itemVariants}
               >
-                Identidade SharkFit
+                SharkFit
               </motion.h2>
               <motion.p className="text-muted-foreground mb-6 text-lg" variants={itemVariants}>
-                Criação de marca, app e identidade visual com foco em performance e realismo.
+                Aplicativo fitness inteligente para evolução diária.
               </motion.p>
               <ul className="space-y-3 mb-8">
                 {bulletPoints.map((point, index) => (
