@@ -1,3 +1,4 @@
+
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -46,7 +47,7 @@ const SharkFitHighlight = () => {
             variants={textContentVariants}
             initial="hidden" // Text block starts hidden
             whileInView="visible" // Animates when this block itself is scrolled into view
-            viewport={{ once: true, amount: 0.3 }} // Trigger when 30% of THIS text block is visible
+            viewport={{ once: true, amount: 0.05 }} // Trigger when 5% of THIS text block is visible
           >
             <CardContent className="p-0">
               <h2 className="text-3xl md:text-4xl font-headline mb-4 text-primary">
