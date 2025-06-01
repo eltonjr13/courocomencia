@@ -37,7 +37,7 @@ export default function Home() {
         setIsTextFadingOut(false);
       }
       
-      if (latest > heroHeight * 0.8) { // Keep this threshold for showing projects
+      if (latest > heroHeight * 0.8) { 
         setShowProjects(true);
       } else {
         setShowProjects(false);
@@ -65,9 +65,14 @@ export default function Home() {
           transition={{ duration: 0.5 }} 
         >
           <motion.h1 
-            className="font-headline mb-4 md:mb-6 text-white"
+            className="font-headline mb-4 md:mb-6"
             style={{ 
               fontSize: 'clamp(2.5rem, 8vw, 5rem)', 
+              background: 'linear-gradient(180deg, #64B5F6 0%, #3A8CD8 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textFillColor: 'transparent',
             }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -76,9 +81,14 @@ export default function Home() {
             CouroComencia
           </motion.h1>
           <motion.p 
-            className="font-semibold font-body mb-2 md:mb-3 text-white"
+            className="font-semibold font-body mb-2 md:mb-3"
             style={{ 
-              fontSize: 'clamp(0.85rem, 3.4vw, 1.5rem)', 
+              fontSize: 'clamp(0.72rem, 2.89vw, 1.27rem)', // Approx 15% smaller than previous
+              background: 'linear-gradient(180deg, #64B5F6 0%, #4F98D0 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textFillColor: 'transparent',
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -87,9 +97,14 @@ export default function Home() {
             Explorando Novos Limites
           </motion.p>
           <motion.p 
-            className="font-semibold font-body text-white"
+            className="font-semibold font-body"
             style={{ 
-              fontSize: 'clamp(0.6rem, 2.5vw, 1.1rem)', 
+              fontSize: 'clamp(0.54rem, 2.17vw, 0.95rem)', // Approx 25% smaller than the new first subtitle
+              background: 'linear-gradient(180deg, #4F98D0 0%, #3A8CD8 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textFillColor: 'transparent',
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
