@@ -35,7 +35,7 @@ const SharkFitHighlight = () => {
               alt="SharkFit Video Preview"
               width={800}
               height={450}
-              className="object-cover w-full h-auto aspect-video rounded-t-lg shadow-lg shadow-accent/30 border border-accent/50"
+              className="object-cover w-full h-auto aspect-video rounded-t-lg border border-accent/30 shadow-[0_0_15px_hsl(var(--accent)/0.5),_0_0_35px_hsl(var(--accent)/0.3),_0_0_60px_hsl(var(--accent)/0.15)]"
               data-ai-hint="fitness app video"
               priority
             />
