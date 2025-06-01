@@ -9,21 +9,21 @@ const projects = [
   {
     title: "AI-Assist ChatBot",
     description: "Chatbot inteligente baseado em IA para atendimento, respondendo dúvidas técnicas e gerando conteúdos automáticos como e-mails e descrições de produtos.",
-    image: "/images/ai-assist-chatbot.jpg",
+    image: "/imgs/AI-ASSIST-CHATBOT.jpg",
     alt: "AI-Assist ChatBot Banner",
     aiHint: "chatbot interface"
   },
   {
     title: "CNPJ Insights",
     description: "Ferramenta que busca dados de empresas pelo CNPJ, exibindo informações como nome, sócios, contatos e ramo de atuação.",
-    image: "/images/cnpj-insights.jpg",
+    image: "/imgs/CNPJ-INSIGHTS.JPG.jpg",
     alt: "CNPJ Insights Banner",
     aiHint: "data analytics"
   },
   {
     title: "Maps for All",
     description: "Aplicativo que, ao informar um nicho e uma cidade, retorna empresas do segmento com dados de contato, sócios e localização.",
-    image: "/images/maps-for-all.jpg",
+    image: "/imgs/MapsForAll.jpg.jpg",
     alt: "Maps for All Banner",
     aiHint: "map application"
   }
