@@ -7,24 +7,22 @@ import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
-  const [isDissolving, setIsDissolving] = useState(false);
+  const [isTextFadingOut, setIsTextFadingOut] = useState(false); // For text fade 1 to 0
+  const [particleScrollFade, setParticleScrollFade] = useState(1.0); // For particle fade 1 to 0.5
   const [showProjects, setShowProjects] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const [heroHeight, setHeroHeight] = useState(0);
 
   useEffect(() => {
-    // Set initial height
     if (heroRef.current) {
       setHeroHeight(heroRef.current.offsetHeight);
     }
-    // Update height on resize
     const updateHeroHeight = () => {
       if (heroRef.current) {
         setHeroHeight(heroRef.current.offsetHeight);
       }
     };
     window.addEventListener('resize', updateHeroHeight);
-    // Cleanup
     return () => window.removeEventListener('resize', updateHeroHeight);
   }, []);
 
@@ -32,14 +30,29 @@ export default function Home() {
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    // Ensure heroHeight is positive to avoid issues on initial load or if ref is not ready
     if (heroHeight > 0) {
-      if (latest > heroHeight * 0.6) { // Start dissolving when 60% of hero is scrolled
-        setIsDissolving(true);
+      const scrollThresholdStartFade = heroHeight * 0.8;
+      const scrollThresholdEndFade = heroHeight; // End of hero section
+
+      // Text fade out (1.0 to 0.0) from 80% to 100%
+      if (latest > scrollThresholdStartFade) {
+        setIsTextFadingOut(true);
       } else {
-        setIsDissolving(false);
+        setIsTextFadingOut(false);
       }
-      if (latest > heroHeight * 0.8) { // Show projects when 80% of hero is scrolled
+
+      // Particle fade (1.0 to 0.5) from 80% to 100%
+      if (latest >= scrollThresholdStartFade && latest <= scrollThresholdEndFade) {
+        const progress = (latest - scrollThresholdStartFade) / (scrollThresholdEndFade - scrollThresholdStartFade);
+        setParticleScrollFade(1.0 - progress * 0.5); // Fades from 1.0 down to 0.5
+      } else if (latest < scrollThresholdStartFade) {
+        setParticleScrollFade(1.0);
+      } else { // latest > scrollThresholdEndFade
+        setParticleScrollFade(0.5);
+      }
+      
+      // Show projects when 80% of hero is scrolled (can adjust if needed)
+      if (latest > heroHeight * 0.8) {
         setShowProjects(true);
       } else {
         setShowProjects(false);
@@ -48,10 +61,9 @@ export default function Home() {
   });
   
   useEffect(() => {
-    // Prevent horizontal scroll if any element slightly overflows due to animations/rounding
     document.body.style.overflowX = 'hidden';
     return () => {
-      document.body.style.overflowX = ''; // Reset on unmount
+      document.body.style.overflowX = '';
     };
   }, []);
 
@@ -61,12 +73,12 @@ export default function Home() {
         ref={heroRef} 
         className="h-screen w-full flex flex-col items-center justify-center relative p-4 overflow-hidden"
       >
-        <FloatingParticles />
+        <FloatingParticles scrollFade={particleScrollFade} />
         <motion.div 
           className="relative z-10 text-center flex flex-col items-center" 
           initial={{ opacity: 1 }} 
-          animate={{ opacity: isDissolving ? 0 : 1 }} 
-          transition={{ duration: 0.5 }}
+          animate={{ opacity: isTextFadingOut ? 0 : 1 }} // Text fades to 0
+          transition={{ duration: 0.5 }} // Duration for text fade out
         >
           <motion.h1 
             className="font-headline mb-4 md:mb-6 text-accent text-shadow-hero-title"

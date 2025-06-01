@@ -9,41 +9,58 @@ interface Particle {
   size: number;
   speedX: number;
   speedY: number;
-  opacity: number;
-  targetOpacity: number; // The opacity it should have when not affected by interaction
-  currentOpacity: number; // The actual opacity being rendered
-  isNear: boolean;
-  originalSpeedX: number;
-  originalSpeedY: number;
-  originalTargetOpacity: number;
+  baseOpacity: number; // Target opacity (e.g., 0.8 or 0.5)
+  currentOpacity: number; // Opacity used for drawing, includes twinkle & initial fade & hover
+  colorRGB: string; // e.g., "255,255,255"
+  
+  // Twinkle properties
+  twinkleOffset: number;
+  twinkleDuration: number; // Duration for one full twinkle cycle
+
+  // Hover interaction properties
   isRepelling: boolean;
   repelEndTime: number;
+  originalTargetOpacityBeforeRepel: number; // Base opacity before repel started
 }
 
-const PARTICLE_COLOR_RGB = "255, 255, 255"; // Pure White
-const DESKTOP_NUM_NEAR_PARTICLES = 20;
-const DESKTOP_NUM_FAR_PARTICLES = 110;
-const MOBILE_NUM_NEAR_PARTICLES = 15;
-const MOBILE_NUM_FAR_PARTICLES = 65;
+// Configuration
+const DESKTOP_NUM_NEAR_PARTICLES = 15;
+const DESKTOP_NUM_FAR_PARTICLES = 65; // Total 80
+const MOBILE_NUM_NEAR_PARTICLES = 10;
+const MOBILE_NUM_FAR_PARTICLES = 40; // Total 50
 
-const NEAR_PARTICLE_SIZE_MIN = 10;
-const NEAR_PARTICLE_SIZE_MAX = 12;
-const FAR_PARTICLE_SIZE_MIN = 4;
-const FAR_PARTICLE_SIZE_MAX = 6;
-const NEAR_PARTICLE_SPEED_MIN = 0.25; // px per frame, approx 15px/s at 60fps
-const NEAR_PARTICLE_SPEED_MAX = 0.33; // px per frame, approx 20px/s at 60fps
-const FAR_PARTICLE_SPEED_MIN = 0.08;  // px per frame, approx 5px/s at 60fps
-const FAR_PARTICLE_SPEED_MAX = 0.17;  // px per frame, approx 10px/s at 60fps
-const NEAR_PARTICLE_OPACITY = 0.8; // Increased opacity
-const FAR_PARTICLE_OPACITY = 0.6;  // Increased opacity
-const MOUSE_REPEL_RADIUS = 100;
-const REPEL_STRENGTH = 0.1; 
-const OPACITY_ON_REPEL = 0.2;
-const REPEL_DURATION = 600; // ms
-const INITIAL_FADE_IN_DURATION = 1000; // ms
+const NEAR_PARTICLE_COLOR_RGB = "255, 255, 255";
+const FAR_PARTICLE_COLOR_RGB = "230, 245, 255";
+
+const NEAR_PARTICLE_BASE_OPACITY = 0.8;
+const FAR_PARTICLE_BASE_OPACITY = 0.5;
+
+const NEAR_PARTICLE_SIZE_MIN = 8;
+const NEAR_PARTICLE_SIZE_MAX = 10;
+const FAR_PARTICLE_SIZE_MIN = 3;
+const FAR_PARTICLE_SIZE_MAX = 5;
+
+// Speeds in pixels per second
+const NEAR_PARTICLE_SPEED_PX_S_MIN = 8;
+const NEAR_PARTICLE_SPEED_PX_S_MAX = 12;
+const FAR_PARTICLE_SPEED_PX_S_MIN = 3;
+const FAR_PARTICLE_SPEED_PX_S_MAX = 6;
+
+const MOUSE_REPEL_RADIUS = 80;
+const REPEL_STRENGTH = 0.03; // Softer repulsion
+const OPACITY_ON_REPEL = 1.0;
+const REPEL_EFFECT_DURATION = 500; // ms for opacity change
+const INITIAL_FADE_IN_DURATION = 1200; // ms
 const MOBILE_BREAKPOINT = 768;
 
-const FloatingParticles: React.FC = () => {
+// Convert px/s to px/frame (assuming 60fps for approximation)
+const pxPerSecondToPxPerFrame = (px_s: number) => px_s / 60;
+
+interface FloatingParticlesProps {
+  scrollFade?: number; // Opacity factor from scrolling (0.5 to 1.0)
+}
+
+const FloatingParticles: React.FC<FloatingParticlesProps> = ({ scrollFade = 1.0 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesArray = useRef<Particle[]>([]);
   const mouse = useRef<{ x: number | null; y: number | null }>({ x: null, y: null });
@@ -60,15 +77,17 @@ const FloatingParticles: React.FC = () => {
       ? Math.random() * (NEAR_PARTICLE_SIZE_MAX - NEAR_PARTICLE_SIZE_MIN) + NEAR_PARTICLE_SIZE_MIN
       : Math.random() * (FAR_PARTICLE_SIZE_MAX - FAR_PARTICLE_SIZE_MIN) + FAR_PARTICLE_SIZE_MIN;
     
-    const speedMagnitude = isNear
-      ? Math.random() * (NEAR_PARTICLE_SPEED_MAX - NEAR_PARTICLE_SPEED_MIN) + NEAR_PARTICLE_SPEED_MIN
-      : Math.random() * (FAR_PARTICLE_SPEED_MAX - FAR_PARTICLE_SPEED_MIN) + FAR_PARTICLE_SPEED_MIN;
+    const speedMagnitudePxS = isNear
+      ? Math.random() * (NEAR_PARTICLE_SPEED_PX_S_MAX - NEAR_PARTICLE_SPEED_PX_S_MIN) + NEAR_PARTICLE_SPEED_PX_S_MIN
+      : Math.random() * (FAR_PARTICLE_SPEED_PX_S_MAX - FAR_PARTICLE_SPEED_PX_S_MIN) + FAR_PARTICLE_SPEED_PX_S_MIN;
     
+    const speedMagnitude = pxPerSecondToPxPerFrame(speedMagnitudePxS);
     const angle = Math.random() * Math.PI * 2;
     const speedX = Math.cos(angle) * speedMagnitude;
     const speedY = Math.sin(angle) * speedMagnitude;
     
-    const targetOpacity = isNear ? NEAR_PARTICLE_OPACITY : FAR_PARTICLE_OPACITY;
+    const baseOpacity = isNear ? NEAR_PARTICLE_BASE_OPACITY : FAR_PARTICLE_BASE_OPACITY;
+    const colorRGB = isNear ? NEAR_PARTICLE_COLOR_RGB : FAR_PARTICLE_COLOR_RGB;
 
     return {
       x: Math.random() * canvasWidth,
@@ -76,15 +95,14 @@ const FloatingParticles: React.FC = () => {
       size,
       speedX,
       speedY,
-      opacity: 0, 
-      targetOpacity,
-      currentOpacity: 0, 
-      isNear,
-      originalSpeedX: speedX,
-      originalSpeedY: speedY,
-      originalTargetOpacity: targetOpacity,
+      baseOpacity,
+      currentOpacity: 0, // Starts at 0 for fade-in
+      colorRGB,
+      twinkleOffset: Math.random() * Math.PI * 2, // Random start phase for twinkle
+      twinkleDuration: 3000 + Math.random() * 2000, // 3-5 seconds per twinkle cycle
       isRepelling: false,
       repelEndTime: 0,
+      originalTargetOpacityBeforeRepel: baseOpacity,
     };
   }, []);
 
@@ -134,7 +152,6 @@ const FloatingParticles: React.FC = () => {
       mouse.current.y = null;
     };
 
-    // Check if canvasRef.current exists before adding event listeners
     const currentCanvas = canvasRef.current;
     currentCanvas?.addEventListener('mousemove', handleMouseMove);
     currentCanvas?.addEventListener('mouseleave', handleMouseLeave);
@@ -162,17 +179,28 @@ const FloatingParticles: React.FC = () => {
       const initialElapsedTime = now - pageLoadTime.current;
 
       particlesArray.current.forEach(particle => {
-        if (initialElapsedTime < INITIAL_FADE_IN_DURATION) {
-          particle.currentOpacity = (initialElapsedTime / INITIAL_FADE_IN_DURATION) * particle.targetOpacity;
-        } else {
-          if (!particle.isRepelling) {
-            particle.currentOpacity = particle.targetOpacity;
-          }
-        }
+        let interactiveOpacityTarget = particle.baseOpacity;
 
+        // Twinkle effect calculation
+        const twinkleAmplitude = Math.max(0, 0.9 - particle.baseOpacity); // Ensure amplitude is non-negative
+        const sineValue = Math.sin(now / particle.twinkleDuration * (2 * Math.PI) + particle.twinkleOffset); // Full cycle 0-1
+        let twinkledOpacity = particle.baseOpacity + twinkleAmplitude * (sineValue * 0.5 + 0.5);
+        
+        interactiveOpacityTarget = twinkledOpacity;
+
+
+        // Initial fade-in
+        let finalOpacity = 0;
+        if (initialElapsedTime < INITIAL_FADE_IN_DURATION) {
+          finalOpacity = (initialElapsedTime / INITIAL_FADE_IN_DURATION) * interactiveOpacityTarget;
+        } else {
+          finalOpacity = interactiveOpacityTarget;
+        }
+        
         let tempX = particle.x;
         let tempY = particle.y;
         
+        // Mouse interaction
         if (mouse.current.x !== null && mouse.current.y !== null) {
           const dxMouse = particle.x - mouse.current.x;
           const dyMouse = particle.y - mouse.current.y;
@@ -181,52 +209,45 @@ const FloatingParticles: React.FC = () => {
           if (distanceMouse < MOUSE_REPEL_RADIUS) {
             if (!particle.isRepelling) {
               particle.isRepelling = true;
-              particle.originalTargetOpacity = particle.targetOpacity; 
-              particle.targetOpacity = OPACITY_ON_REPEL; 
+              particle.originalTargetOpacityBeforeRepel = finalOpacity; // Capture current opacity before repel
             }
-            particle.repelEndTime = now + REPEL_DURATION; 
+            particle.repelEndTime = now + REPEL_EFFECT_DURATION; 
 
             const repelFactor = (MOUSE_REPEL_RADIUS - distanceMouse) / MOUSE_REPEL_RADIUS;
             const forceX = (dxMouse / distanceMouse) * repelFactor * REPEL_STRENGTH;
             const forceY = (dyMouse / distanceMouse) * repelFactor * REPEL_STRENGTH;
             
-            tempX += forceX * 5; 
-            tempY += forceY * 5;
+            tempX += forceX * 50; // Apply force more visibly for gentle push
+            tempY += forceY * 50;
+            finalOpacity = OPACITY_ON_REPEL; // Target opacity during repel
 
-          }
-        }
-
-        if (particle.isRepelling) {
-          if (now < particle.repelEndTime) {
-            if (particle.currentOpacity > OPACITY_ON_REPEL) {
-              particle.currentOpacity -= (particle.currentOpacity - OPACITY_ON_REPEL) * 0.1; 
-            } else if (particle.currentOpacity < OPACITY_ON_REPEL) {
-               particle.currentOpacity += (OPACITY_ON_REPEL - particle.currentOpacity) * 0.1;
-            }
-             if (Math.abs(particle.currentOpacity - OPACITY_ON_REPEL) < 0.01) {
-                particle.currentOpacity = OPACITY_ON_REPEL;
-            }
-
-          } else { 
-            particle.isRepelling = false;
-            particle.targetOpacity = particle.originalTargetOpacity; 
+          } else if (particle.isRepelling && distanceMouse >= MOUSE_REPEL_RADIUS) {
+             // If mouse moved out of radius while repelling, stop repelling
+             particle.isRepelling = false;
           }
         }
         
-        if (!particle.isRepelling && initialElapsedTime >= INITIAL_FADE_IN_DURATION) {
-            if (particle.currentOpacity < particle.targetOpacity) {
-                particle.currentOpacity += (particle.targetOpacity - particle.currentOpacity) * 0.05; 
-            } else if (particle.currentOpacity > particle.targetOpacity) {
-                particle.currentOpacity -= (particle.currentOpacity - particle.targetOpacity) * 0.05;
-            }
-            if (Math.abs(particle.currentOpacity - particle.targetOpacity) < 0.01) {
-                particle.currentOpacity = particle.targetOpacity;
-            }
+        // Smoothly transition opacity if repelling or repel ended
+        if (particle.isRepelling) {
+          if (now < particle.repelEndTime) {
+            // Gradually move towards OPACITY_ON_REPEL
+             particle.currentOpacity += (OPACITY_ON_REPEL - particle.currentOpacity) * 0.2;
+          } else {
+            particle.isRepelling = false; 
+            // Start transitioning back to original twinkled opacity after repel duration ends
+          }
         }
+        
+        if (!particle.isRepelling) {
+            // Gradually move towards the calculated finalOpacity (which includes twinkle)
+            particle.currentOpacity += (finalOpacity - particle.currentOpacity) * 0.1;
+        }
+
 
         particle.x += particle.speedX;
         particle.y += particle.speedY;
 
+        // Boundary check (wrap around)
         if (particle.x > canvas.width + particle.size) particle.x = -particle.size;
         else if (particle.x < -particle.size) particle.x = canvas.width + particle.size;
         if (particle.y > canvas.height + particle.size) particle.y = -particle.size;
@@ -234,7 +255,9 @@ const FloatingParticles: React.FC = () => {
         
         ctx.beginPath();
         ctx.arc(tempX, tempY, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${PARTICLE_COLOR_RGB}, ${particle.currentOpacity})`;
+        // Apply scrollFade to the final opacity
+        const opacityToDraw = Math.max(0, Math.min(1, particle.currentOpacity * scrollFade));
+        ctx.fillStyle = `rgba(${particle.colorRGB}, ${opacityToDraw})`;
         ctx.fill();
       });
 
@@ -248,13 +271,14 @@ const FloatingParticles: React.FC = () => {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [isClient, createParticle, initParticles]);
+  // scrollFade is a dependency now
+  }, [isClient, createParticle, initParticles, scrollFade]);
 
 
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full z-[1] pointer-events-none"
+      className="absolute inset-0 w-full h-full z-[1] pointer-events-none blur-[1px]"
     />
   );
 };
