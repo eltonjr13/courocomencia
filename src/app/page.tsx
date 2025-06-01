@@ -56,10 +56,10 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center bg-transparent text-foreground w-full relative z-[2]">
       <section 
         ref={heroRef} 
-        className="h-screen w-full flex flex-col items-center justify-center relative p-4 overflow-hidden"
+        className="h-screen w-full relative p-4 overflow-hidden" // Removed flex, items-center, justify-center
       >
         <motion.div 
-          className="relative z-10 text-center flex flex-col items-center" 
+          className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 text-center flex flex-col items-center" // Added absolute positioning
           initial={{ opacity: 1 }} 
           animate={{ opacity: isTextFadingOut ? 0 : 1 }} 
           transition={{ duration: 0.5 }} 
@@ -79,7 +79,7 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body mb-2 md:mb-3 hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(0.61rem, 2.45vw, 1.08rem)',
+              fontSize: 'clamp(0.61rem, 1.8vw, 1.0rem)', // Adjusted first subtitle
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
@@ -91,7 +91,7 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(0.46rem, 1.84vw, 0.81rem)',
+              fontSize: 'clamp(0.46rem, 1.35vw, 0.75rem)', // Adjusted second subtitle (approx 25% smaller than new first subtitle)
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
