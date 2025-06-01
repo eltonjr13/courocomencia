@@ -2,35 +2,27 @@
 "use client";
 import ProjectShowcaseSection from "@/components/couro/ProjectShowcaseSection";
 import PortfolioFooter from "@/components/couro/PortfolioFooter";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import SplashScreen from "@/components/splash/SplashScreen";
+import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
   const [isTextFadingOut, setIsTextFadingOut] = useState(false);
   const [showProjects, setShowProjects] = useState(false);
-  const heroRef = useRef<HTMLDivElement>(null); // For the full hero section
-  const projectsSectionRef = useRef<HTMLDivElement>(null); // For the projects section
-  const [heroHeight, setHeroHeight] = useState(0);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const projectsSectionRef = useRef<HTMLDivElement>(null);
+  
+  const [splashScreenActive, setSplashScreenActive] = useState(true);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    if (heroRef.current) {
-      setHeroHeight(heroRef.current.offsetHeight);
-    }
-    const updateHeroHeight = () => {
-      if (heroRef.current) {
-        setHeroHeight(heroRef.current.offsetHeight);
-      }
-    };
-    window.addEventListener('resize', updateHeroHeight);
-    return () => window.removeEventListener('resize', updateHeroHeight);
+    setIsClient(true); // Ensure client-side logic runs after mount
   }, []);
-
 
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    // Logic for showing the ProjectShowcaseSection
-    if (heroRef.current) { 
+    if (heroRef.current) {
       const currentHeroHeight = heroRef.current.offsetHeight;
       if (currentHeroHeight > 0 && latest > currentHeroHeight * 0.8) {
         setShowProjects(true);
@@ -39,20 +31,17 @@ export default function Home() {
       }
     }
 
-    // New logic for hero text fade-out
     if (projectsSectionRef.current) {
       const projectsSectionRect = projectsSectionRef.current.getBoundingClientRect();
       const viewportMiddle = window.innerHeight / 2;
       
-      // Fade out when the top of the projects section is at or above the middle of the viewport
       if (projectsSectionRect.top <= viewportMiddle) {
         setIsTextFadingOut(true);
       } else {
         setIsTextFadingOut(false);
       }
     } else {
-      // If projects section isn't rendered or ref not attached, don't fade text
-      setIsTextFadingOut(false); 
+      setIsTextFadingOut(false);
     }
   });
   
@@ -63,19 +52,31 @@ export default function Home() {
     };
   }, []);
 
+  if (!isClient) {
+    // Render nothing or a basic loader until client is determined
+    // to prevent hydration mismatch with splash screen logic
+    return null; 
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center bg-transparent text-foreground w-full relative z-[2]">
-      {/* Hero Section - acts as a spacer and for showProjects trigger */}
+      <AnimatePresence>
+        {splashScreenActive && (
+          <SplashScreen onSplashFinished={() => setSplashScreenActive(false)} />
+        )}
+      </AnimatePresence>
+
       <section 
         ref={heroRef} 
         className="h-screen w-full relative p-4 overflow-hidden"
       >
-        {/* Hero Text Container - NOW FIXED */}
         <motion.div 
           className="fixed top-[40%] left-1/2 -translate-x-1/2 z-10 text-center flex flex-col items-center" 
-          initial={{ opacity: 1 }} 
-          animate={{ opacity: isTextFadingOut ? 0 : 1 }} 
-          transition={{ duration: 0.5 }} 
+          initial={{ opacity: 0 }} 
+          animate={{ 
+            opacity: !splashScreenActive && !isTextFadingOut ? 1 : 0 
+          }} 
+          transition={{ duration: 0.5, delay: !splashScreenActive ? 0.3 : 0 }} 
         >
           <motion.h1 
             className="font-headline mb-4 md:mb-6 hero-title-pulse"
@@ -84,51 +85,52 @@ export default function Home() {
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            animate={!splashScreenActive ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: !splashScreenActive ? 0.6 : 0 }}
           >
             CouroComencia
           </motion.h1>
           <motion.p 
             className="font-semibold font-body mb-2 md:mb-3 hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(0.93rem, 2.5vw, 1.2rem)',
+              fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', // Adjusted from 1.5rem, 4vw, 2rem
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.8 + 0.3 }} 
+            animate={!splashScreenActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: !splashScreenActive ? 0.8 : 0 }} 
           >
             Apenas tentamos não explodir a internet
           </motion.p>
           <motion.p 
             className="font-semibold font-body hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(0.75rem, 2vw, 0.96rem)',
+              fontSize: 'clamp(0.96rem, 2.4vw, 1.28rem)', // Adjusted from 1.2rem, 3vw, 1.6rem
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.8 + 0.3 + 0.2 }} 
+            animate={!splashScreenActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: !splashScreenActive ? 1.0 : 0 }} 
           >
             Spoiler: falhamos (mas com estilo)
           </motion.p>
         </motion.div>
       </section>
 
-      {/* Projects Section */}
       <motion.div
-        ref={projectsSectionRef} // Assign ref to the projects section wrapper
+        ref={projectsSectionRef}
         initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: showProjects ? 1 : 0, y: showProjects ? 0 : 50 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        animate={{ 
+          opacity: !splashScreenActive && showProjects ? 1 : 0, 
+          y: !splashScreenActive && showProjects ? 0 : 50 
+        }}
+        transition={{ duration: 0.8, ease: "easeOut", delay: !splashScreenActive ? 0.1 : 0 }}
         className="w-full"
       >
         <ProjectShowcaseSection />
       </motion.div>
       
-      <PortfolioFooter />
+      {!splashScreenActive && <PortfolioFooter />}
     </main>
   );
 }
-    
