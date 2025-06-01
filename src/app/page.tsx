@@ -27,7 +27,6 @@ export default function Home() {
     }
   });
   
-  // Ensure body has overflow-x-hidden to prevent horizontal scrollbars from animations
   useEffect(() => {
     document.body.style.overflowX = 'hidden';
     return () => {
@@ -39,23 +38,26 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center bg-background text-foreground w-full">
       <section ref={heroRef} className="h-screen w-full flex flex-col items-center justify-center relative p-4">
         <DynamicHead isDissolving={isDissolving} />
-        <motion.div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-4 text-center z-10 pointer-events-none"
-          initial={{ opacity: 1 }}
-          animate={{ opacity: isDissolving ? 0 : 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h1 className="text-5xl md:text-7xl font-headline mb-4 md:mb-6 text-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary">
-            CouroComencia
-          </h1>
-          <p className="text-2xl md:text-3xl font-semibold font-body mb-3 md:mb-4 text-accent text-shadow-subtle-hero">
-            Explorando Novos Limites
-          </p>
-          <p className="text-xl md:text-2xl font-semibold font-body text-accent text-shadow-subtle-hero">
-            Inovação em cada detalhe
-          </p>
-        </motion.div>
+        {/* Hero text is now fixed relative to the viewport until it fades */}
       </section>
+
+      {/* This div contains the hero text and is positioned fixed */}
+      <motion.div 
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-4 text-center z-10 pointer-events-none"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: isDissolving ? 0 : 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1 className="text-5xl md:text-7xl font-headline mb-4 md:mb-6 text-shadow-lg bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary">
+          CouroComencia
+        </h1>
+        <p className="text-2xl md:text-3xl font-semibold font-body mb-3 md:mb-4 text-accent text-shadow-subtle-hero">
+          Explorando Novos Limites
+        </p>
+        <p className="text-xl md:text-2xl font-semibold font-body text-accent text-shadow-subtle-hero">
+          Inovação em cada detalhe
+        </p>
+      </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: 50 }}
