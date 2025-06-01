@@ -33,7 +33,7 @@ const SharkFitHighlight = () => {
             style={{ paddingBottom: "56.25%", height: 0 }} // 16:9 Aspect Ratio
           >
             <iframe
-              src="https://www.youtube.com/embed/dtHyBOisCr8"
+              src="https://www.youtube.com/embed/dtHyBOisCr8?rel=0&modestbranding=1&controls=1&iv_load_policy=3&fs=1&showinfo=0&autohide=1"
               title="SharkFit Video Preview"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -77,3 +77,4 @@ const SharkFitHighlight = () => {
 };
 
 export default SharkFitHighlight;
+
