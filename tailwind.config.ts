@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -12,7 +13,7 @@ export default {
       fontFamily: {
         body: ['Space Grotesk', 'sans-serif'],
         headline: ['Space Grotesk', 'sans-serif'],
-        code: ['Space Grotesk', 'monospace'], // Using Space Grotesk for code as well for consistency in this retro-tech style
+        code: ['Space Grotesk', 'monospace'], 
       },
       colors: {
         background: 'hsl(var(--background))',
@@ -93,7 +94,30 @@ export default {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
+      textShadow: {
+        sm: '0 1px 2px var(--tw-shadow-color)',
+        DEFAULT: '0 2px 4px var(--tw-shadow-color)', // Default can be a generic one
+        lg: '0 8px 16px var(--tw-shadow-color)',
+        'accent-subtle': '0 0 6px hsl(var(--accent) / 0.4)', // Example with accent color
+        'accent-md': '0 0 8px hsl(var(--accent) / 0.6)',   // Example with accent color
+        'hero-title': '0 0 8px rgba(255,255,255,0.4)',    // For CouroComencia title
+        'hero-subtitle': '0 0 6px rgba(255,255,255,0.3)', // For subtitles
+      },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [
+    require('tailwindcss-animate'),
+    function ({ matchUtilities, theme }: { matchUtilities: any, theme: any }) {
+      matchUtilities(
+        {
+          'text-shadow': (value: any) => ({
+            textShadow: value,
+          }),
+        },
+        { values: theme('textShadow') }
+      )
+    },
+  ],
 } satisfies Config;
+
+    
