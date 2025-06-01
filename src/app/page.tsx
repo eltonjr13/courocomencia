@@ -37,7 +37,7 @@ export default function Home() {
         setIsTextFadingOut(false);
       }
       
-      if (latest > heroHeight * 0.8) {
+      if (latest > heroHeight * 0.8) { // Keep this threshold for showing projects
         setShowProjects(true);
       } else {
         setShowProjects(false);
@@ -58,7 +58,6 @@ export default function Home() {
         ref={heroRef} 
         className="h-screen w-full flex flex-col items-center justify-center relative p-4 overflow-hidden"
       >
-        {/* FloatingParticles is now global, rendered from layout.tsx */}
         <motion.div 
           className="relative z-10 text-center flex flex-col items-center" 
           initial={{ opacity: 1 }} 
@@ -66,7 +65,7 @@ export default function Home() {
           transition={{ duration: 0.5 }} 
         >
           <motion.h1 
-            className="font-headline mb-4 md:mb-6 text-accent text-shadow-hero-title"
+            className="font-headline mb-4 md:mb-6 text-white"
             style={{ 
               fontSize: 'clamp(2.5rem, 8vw, 5rem)', 
             }}
@@ -77,9 +76,9 @@ export default function Home() {
             CouroComencia
           </motion.h1>
           <motion.p 
-            className="font-semibold font-body mb-2 md:mb-3 text-accent text-shadow-hero-subtitle"
+            className="font-semibold font-body mb-2 md:mb-3 text-white"
             style={{ 
-              fontSize: 'clamp(1rem, 4vw, 1.75rem)', 
+              fontSize: 'clamp(0.85rem, 3.4vw, 1.5rem)', 
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -88,9 +87,9 @@ export default function Home() {
             Explorando Novos Limites
           </motion.p>
           <motion.p 
-            className="font-semibold font-body text-accent text-shadow-hero-subtitle"
+            className="font-semibold font-body text-white"
             style={{ 
-              fontSize: 'clamp(1rem, 4vw, 1.75rem)', 
+              fontSize: 'clamp(0.6rem, 2.5vw, 1.1rem)', 
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
