@@ -114,8 +114,11 @@ body {
     100% { transform: scale(1); }
   }
 
-  .hero-text-pulse-container {
-    animation: slowPulse 4s ease-in-out infinite;
-    animation-delay: 1.9s; /* Starts after initial load animations complete */
+  .hero-title-pulse {
+    animation: slowPulse 4s ease-in-out 1.5s infinite;
+  }
+
+  .hero-subtitle-pulse {
+    animation: slowPulse 5s ease-in-out 2s infinite;
   }
 }

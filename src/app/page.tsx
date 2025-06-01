@@ -59,13 +59,13 @@ export default function Home() {
         className="h-screen w-full flex flex-col items-center justify-center relative p-4 overflow-hidden"
       >
         <motion.div 
-          className="relative z-10 text-center flex flex-col items-center hero-text-pulse-container" 
+          className="relative z-10 text-center flex flex-col items-center" 
           initial={{ opacity: 1 }} 
           animate={{ opacity: isTextFadingOut ? 0 : 1 }} 
           transition={{ duration: 0.5 }} 
         >
           <motion.h1 
-            className="font-headline mb-4 md:mb-6"
+            className="font-headline mb-4 md:mb-6 hero-title-pulse"
             style={{ 
               fontSize: 'clamp(2.5rem, 8vw, 5rem)',
               color: '#FFFFFF',
@@ -77,9 +77,9 @@ export default function Home() {
             CouroComencia
           </motion.h1>
           <motion.p 
-            className="font-semibold font-body mb-2 md:mb-3"
+            className="font-semibold font-body mb-2 md:mb-3 hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(0.61rem, 2.45vw, 1.08rem)', // Approx 15% smaller than original 0.72rem vw base
+              fontSize: 'clamp(0.61rem, 2.45vw, 1.08rem)',
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
@@ -89,9 +89,9 @@ export default function Home() {
             Explorando Novos Limites
           </motion.p>
           <motion.p 
-            className="font-semibold font-body"
+            className="font-semibold font-body hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(0.46rem, 1.84vw, 0.81rem)', // Approx 25% smaller than the new first subtitle's 0.61rem vw base
+              fontSize: 'clamp(0.46rem, 1.84vw, 0.81rem)',
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
