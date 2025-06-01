@@ -92,26 +92,26 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body mb-2 md:mb-3 hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(1.17rem, 3.2vw, 1.5rem)',
+              fontSize: 'clamp(0.93rem, 2.5vw, 1.2rem)',
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.8 + 0.3 }} 
           >
-            Explorando Novos Limites
+            Apenas tentamos não explodir a internet
           </motion.p>
           <motion.p 
             className="font-semibold font-body hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(0.93rem, 2.5vw, 1.2rem)',
+              fontSize: 'clamp(0.75rem, 2vw, 0.96rem)',
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.8 + 0.3 + 0.2 }} 
           >
-            Inovação em cada detalhe
+            Spoiler: falhamos (mas com estilo)
           </motion.p>
         </motion.div>
       </section>
