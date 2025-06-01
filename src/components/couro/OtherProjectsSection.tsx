@@ -9,19 +9,22 @@ const projects = [
   {
     title: "AI-Assist ChatBot",
     description: "Chatbot inteligente baseado em IA para atendimento, respondendo dúvidas técnicas e gerando conteúdos automáticos como e-mails e descrições de produtos.",
-    image: "https://placehold.co/600x400.png",
+    image: "/images/ai-assist-chatbot.jpg",
+    alt: "AI-Assist ChatBot Banner",
     aiHint: "chatbot interface"
   },
   {
     title: "CNPJ Insights",
     description: "Ferramenta que busca dados de empresas pelo CNPJ, exibindo informações como nome, sócios, contatos e ramo de atuação.",
-    image: "https://placehold.co/600x400.png",
+    image: "/images/cnpj-insights.jpg",
+    alt: "CNPJ Insights Banner",
     aiHint: "data analytics"
   },
   {
     title: "Maps for All",
     description: "Aplicativo que, ao informar um nicho e uma cidade, retorna empresas do segmento com dados de contato, sócios e localização.",
-    image: "https://placehold.co/600x400.png",
+    image: "/images/maps-for-all.jpg",
+    alt: "Maps for All Banner",
     aiHint: "map application"
   }
 ];
@@ -63,14 +66,16 @@ const OtherProjectsSection = () => {
           >
             <Card className="h-full flex flex-col bg-card/70 border-border shadow-lg hover:shadow-accent/30 transition-shadow duration-300">
               <CardHeader className="p-0">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  width={600}
-                  height={400}
-                  className="rounded-t-lg object-cover w-full h-48"
-                  data-ai-hint={project.aiHint}
-                />
+                <div className="project-banner-container rounded-t-lg">
+                  <Image
+                    src={project.image}
+                    alt={project.alt}
+                    fill
+                    className="object-cover object-center project-banner"
+                    sizes="(max-width: 639px) calc(100vw - 2rem), (max-width: 767px) 66vw, (max-width: 1023px) 50vw, 33vw"
+                    data-ai-hint={project.aiHint}
+                  />
+                </div>
               </CardHeader>
               <CardContent className="flex-grow p-6">
                 <CardTitle className="text-xl font-headline mb-2 text-primary">{project.title}</CardTitle>
@@ -99,7 +104,7 @@ const OtherProjectsSection = () => {
         .scrollbar-thin::-webkit-scrollbar-thumb {
           background-color: hsl(var(--accent));
           border-radius: 10px;
-          border: 2px solid transparent; // Match track color for seamless look
+          border: 2px solid transparent; 
           background-clip: content-box;
         }
       `}</style>
