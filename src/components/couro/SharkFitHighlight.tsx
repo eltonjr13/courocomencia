@@ -36,7 +36,7 @@ const SharkFitHighlight = () => {
     const playerElementId = 'youtube-player-sharkfit';
 
     const onPlayerStateChange = (event: any) => { 
-      // Glow logic removed
+      // No glow logic needed anymore
     };
 
     const onPlayerReady = (event: any) => { 
@@ -112,7 +112,7 @@ const SharkFitHighlight = () => {
         >
           <div
             ref={playerWrapperRef}
-            className="relative rounded-lg overflow-hidden shadow-lg border border-border/50" 
+            className="relative overflow-hidden" // Removed rounded-lg, shadow-lg, border, border-border/50
             style={{ paddingBottom: "56.25%", height: 0 }} // 16:9 Aspect Ratio container
           >
             <div id="youtube-player-sharkfit" className="absolute top-0 left-0 w-full h-full"></div>
