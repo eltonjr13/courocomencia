@@ -24,9 +24,10 @@ declare global {
 
 const SharkFitHighlight = () => {
   const bulletPoints = [
-    "Monitoramento nutricional e físico",
     "Dashboard intuitivo",
     "Rotina personalizada",
+    "Monitoramento nutricional e físico"
+  
   ];
 
   const playerWrapperRef = useRef<HTMLDivElement>(null);

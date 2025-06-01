@@ -1,6 +1,5 @@
 
 "use client";
-import DynamicHead from "@/components/dynamic-head";
 import ProjectShowcaseSection from "@/components/couro/ProjectShowcaseSection";
 import PortfolioFooter from "@/components/couro/PortfolioFooter";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
@@ -37,8 +36,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center bg-background text-foreground w-full">
       <section ref={heroRef} className="h-screen w-full flex flex-col items-center justify-center relative p-4">
-        <DynamicHead isDissolving={isDissolving} />
-        {/* Hero text is now fixed relative to the viewport until it fades */}
+        {/* DynamicHead component removed */}
       </section>
 
       {/* This div contains the hero text and is positioned fixed */}
