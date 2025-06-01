@@ -1,8 +1,8 @@
 
 "use client";
 import { motion } from "framer-motion";
-import { Instagram, Linkedin } from "lucide-react"; // Using Linkedin as common professional network
-import FooterInitials from "./FooterInitials";
+import { Instagram, Linkedin } from "lucide-react"; 
+import Image from "next/image";
 
 // Custom Behance Icon SVG Component
 const BehanceIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -36,7 +36,6 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
 const socialLinks = [
   { name: "Instagram", Icon: Instagram, url: "https://instagram.com/courocomencia" },
   { name: "WhatsApp", Icon: WhatsAppIcon, url: "https://wa.me/yourphonenumber" }, // Replace with actual number
-  { name: "Behance", Icon: BehanceIcon, url: "https://behance.net/courocomencia" },
   { name: "LinkedIn", Icon: Linkedin, url: "https://linkedin.com/company/courocomencia" },
 ];
 
@@ -51,7 +50,14 @@ const PortfolioFooter = () => {
     >
       <div className="container mx-auto px-4 text-center">
         <div className="flex justify-center mb-6 md:mb-8">
-          <FooterInitials />
+          <Image 
+            src="/imgs/logo-rocket.png" 
+            alt="CouroComencia Logo" 
+            width={100} 
+            height={100} 
+            className="object-contain"
+            data-ai-hint="rocket logo" 
+          />
         </div>
         <motion.p 
           className="text-muted-foreground mb-6 md:mb-8 max-w-xl mx-auto text-lg"
