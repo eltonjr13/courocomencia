@@ -68,7 +68,7 @@ export default function Home() {
             className="font-headline mb-4 md:mb-6"
             style={{ 
               fontSize: 'clamp(2.5rem, 8vw, 5rem)', 
-              background: 'linear-gradient(180deg, #64B5F6 0%, #3A8CD8 100%)',
+              background: 'linear-gradient(180deg, #FFFFFF 0%, #64B5F6 50%, #FFFFFF 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -83,8 +83,8 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body mb-2 md:mb-3"
             style={{ 
-              fontSize: 'clamp(0.72rem, 2.89vw, 1.27rem)', // Approx 15% smaller than previous
-              background: 'linear-gradient(180deg, #64B5F6 0%, #4F98D0 100%)',
+              fontSize: 'clamp(0.72rem, 2.89vw, 1.27rem)', 
+              background: 'linear-gradient(180deg, #FFFFFF 0%, rgba(100,181,246,0.5) 50%, #FFFFFF 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -99,8 +99,8 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body"
             style={{ 
-              fontSize: 'clamp(0.54rem, 2.17vw, 0.95rem)', // Approx 25% smaller than the new first subtitle
-              background: 'linear-gradient(180deg, #4F98D0 0%, #3A8CD8 100%)',
+              fontSize: 'clamp(0.54rem, 2.17vw, 0.95rem)', 
+              background: 'linear-gradient(180deg, #FFFFFF 0%, rgba(100,181,246,0.3) 50%, #FFFFFF 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
