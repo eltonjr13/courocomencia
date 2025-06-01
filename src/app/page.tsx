@@ -79,7 +79,7 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body mb-2 md:mb-3 hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(0.61rem, 1.8vw, 1.0rem)', 
+              fontSize: 'clamp(1.17rem, 5vw, 1.875rem)', 
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
@@ -91,7 +91,7 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(0.46rem, 1.35vw, 0.75rem)', 
+              fontSize: 'clamp(0.93rem, 4vw, 1.5rem)', 
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
