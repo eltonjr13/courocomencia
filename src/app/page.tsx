@@ -67,12 +67,8 @@ export default function Home() {
           <motion.h1 
             className="font-headline mb-4 md:mb-6"
             style={{ 
-              fontSize: 'clamp(2.5rem, 8vw, 5rem)', 
-              background: 'linear-gradient(90deg, #FFFFFF 20%, rgba(0,222,255,0.2) 50%, #FFFFFF 80%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              textFillColor: 'transparent',
+              fontSize: 'clamp(2.5rem, 8vw, 5rem)',
+              color: '#FFFFFF'
             }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -83,12 +79,8 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body mb-2 md:mb-3"
             style={{ 
-              fontSize: 'clamp(0.72rem, 2.89vw, 1.27rem)', 
-              background: 'linear-gradient(90deg, #FFFFFF 25%, rgba(0,222,255,0.15) 50%, #FFFFFF 75%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              textFillColor: 'transparent',
+              fontSize: 'clamp(0.72rem, 2.89vw, 1.27rem)',
+              color: '#FFFFFF'
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -99,12 +91,8 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body"
             style={{ 
-              fontSize: 'clamp(0.54rem, 2.17vw, 0.95rem)', 
-              background: 'linear-gradient(90deg, #FFFFFF 30%, rgba(0,222,255,0.1) 50%, #FFFFFF 70%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              textFillColor: 'transparent',
+              fontSize: 'clamp(0.54rem, 2.17vw, 0.95rem)',
+              color: '#FFFFFF'
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
