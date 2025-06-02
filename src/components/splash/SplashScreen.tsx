@@ -14,6 +14,8 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
   useEffect(() => {
     document.body.classList.add('no-scroll');
     return () => {
+      // Ensure no-scroll is removed if component unmounts unexpectedly
+      // or if isFadingOut logic doesn't complete for some reason.
       document.body.classList.remove('no-scroll');
     };
   }, []);
@@ -29,10 +31,11 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
         document.body.classList.remove('no-scroll');
         onSplashFinished();
         
-        const projectsSection = document.getElementById('projects');
-        if (projectsSection) {
-          projectsSection.scrollIntoView({ behavior: 'smooth' });
-        }
+        // Scroll to projects section was removed as per user request
+        // const projectsSection = document.getElementById('projects');
+        // if (projectsSection) {
+        //   projectsSection.scrollIntoView({ behavior: 'smooth' });
+        // }
         
         setIsVisible(false); 
       }, 400); 
