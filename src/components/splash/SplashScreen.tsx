@@ -53,7 +53,7 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
       className={`fixed top-0 left-0 w-full h-screen bg-transparent flex items-center justify-center z-[9999] ${isFadingOut ? 'fade-out-splash' : ''}`}
     >
       <button
-        className="splash-btn flex items-center justify-center bg-black/60 text-white font-sans font-semibold rounded-full px-6 h-12 transition-all duration-300 ease-in-out hover:bg-black/75 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-[#0A84FF] transform hover:scale-105"
+        className="splash-btn flex items-center justify-center bg-white/10 text-white font-sans font-semibold rounded-full px-8 py-3 h-auto transition-all duration-300 ease-in-out hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-[#0A84FF] transform hover:scale-105"
         aria-label="Entrar no portfólio – Onde o couro tá comendo?"
         onClick={(e) => {
           e.stopPropagation(); 
@@ -62,10 +62,7 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
         onKeyDown={handleKeyDown}
         tabIndex={0}
       >
-        <span className="mr-3 text-base">Onde o couro tá comendo?</span>
-        <div className="flex items-center justify-center bg-[#0A84FF] rounded-full w-8 h-8">
-          <span className="text-white text-xl font-bold">+</span>
-        </div>
+        <span className="text-base">Onde o couro tá comendo?</span>
       </button>
     </div>
   );
