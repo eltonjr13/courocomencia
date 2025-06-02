@@ -148,59 +148,13 @@ body {
   .project-banner {} 
 
   /* Updated Splash Screen Button Styles */
-  .splash-btn {
-    position: relative;
-    padding: 1rem 2.5rem;
-    font-size: 1.125rem; /* Adjusted from 1.25rem */
-    color: #FFFFFF;
-    background: transparent;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    border: none;
-    border-radius: 8px; /* Modern radius */
-    cursor: pointer;
-    overflow: hidden; /* For ::before pseudo-element */
-    transition: transform 0.3s ease, box-shadow 0.2s ease-out;
-  }
-
-  .splash-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 8px; /* Match button's border-radius */
-    padding: 2px; /* Border thickness */
-    background: linear-gradient(60deg, #00DEFF, #64B5F6, #00DEFF);
-    background-size: 300% 300%;
-    animation: glowBorder 4s linear infinite;
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box, 
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-            mask-composite: exclude;
-  }
-
-  @keyframes glowBorder {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  .splash-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 12px #00DEFF;
-  }
-  
-  @media (prefers-reduced-motion: reduce) {
-    .splash-btn::before {
-      animation: none;
-      background: linear-gradient(60deg, #00DEFF, #64B5F6); /* Static gradient for reduced motion */
-    }
-  }
+  /* Previous .splash-btn and related styles for animated border are removed */
+  /* New button is styled primarily with Tailwind in SplashScreen.tsx */
 
   /* Splash Screen Fade-out */
   #splash-overlay.fade-out-splash {
     opacity: 0;
-    transition: opacity 0.6s ease;
+    transition: opacity 0.4s ease; /* Adjusted to 0.4s */
     pointer-events: none;
   }
 }
