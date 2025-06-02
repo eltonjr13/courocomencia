@@ -14,8 +14,6 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
   useEffect(() => {
     document.body.classList.add('no-scroll');
     return () => {
-      // Ensure no-scroll is removed if component unmounts unexpectedly
-      // or if isFadingOut logic doesn't complete for some reason.
       document.body.classList.remove('no-scroll');
     };
   }, []);
@@ -30,13 +28,6 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
       const timer = setTimeout(() => {
         document.body.classList.remove('no-scroll');
         onSplashFinished();
-        
-        // Scroll to projects section was removed as per user request
-        // const projectsSection = document.getElementById('projects');
-        // if (projectsSection) {
-        //   projectsSection.scrollIntoView({ behavior: 'smooth' });
-        // }
-        
         setIsVisible(false); 
       }, 400); 
       return () => clearTimeout(timer);
@@ -59,7 +50,7 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
       className={`fixed top-0 left-0 w-full h-screen bg-transparent flex items-center justify-center z-[9999] ${isFadingOut ? 'fade-out-splash' : ''}`}
     >
       <button
-        className="splash-btn flex items-center justify-center bg-white/10 text-white font-sans font-semibold rounded-full px-8 py-3 h-auto transition-all duration-300 ease-in-out hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-[#0A84FF] transform hover:scale-105"
+        className="splash-btn flex items-center justify-center bg-white/10 text-white font-sans font-semibold rounded-full px-8 py-3 h-auto transition-all duration-300 ease-in-out hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-[#0A84FF] transform hover:scale-105 backdrop-blur-sm"
         aria-label="Entrar no portfólio – Onde o couro tá comendo?"
         onClick={(e) => {
           e.stopPropagation(); 
@@ -73,3 +64,4 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
     </div>
   );
 }
+
