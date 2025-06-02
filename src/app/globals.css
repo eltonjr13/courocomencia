@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Space Grotesk', Arial, Helvetica, sans-serif;
 }
 
 @layer base {
@@ -147,14 +147,39 @@ body {
      beyond what next/image fill + object-cover/center provide. */
   .project-banner {} 
 
-  /* Updated Splash Screen Button Styles */
-  /* Previous .splash-btn and related styles for animated border are removed */
-  /* New button is styled primarily with Tailwind in SplashScreen.tsx */
+  /* Standardized Button Style */
+  .btn {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(6px);
+    color: #FFFFFF;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: background 0.3s, transform 0.3s;
+    border: none; /* Ensure no default browser border */
+    cursor: pointer;
+    display: inline-flex; /* For proper centering of text */
+    align-items: center;
+    justify-content: center;
+    text-decoration: none; /* Remove underline from potential <a> tags used as buttons */
+  }
+
+  .btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+  /* Add focus-visible styles for accessibility if needed */
+  .btn:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
 
   /* Splash Screen Fade-out */
   #splash-overlay.fade-out-splash {
     opacity: 0;
-    transition: opacity 0.4s ease; /* Adjusted to 0.4s */
+    transition: opacity 0.4s ease; 
     pointer-events: none;
   }
 }

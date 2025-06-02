@@ -2,7 +2,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button"; // No longer using ShadCN Button here
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 const projects = [
@@ -82,9 +82,9 @@ const OtherProjectsSection = () => {
                 <p className="text-muted-foreground text-sm line-clamp-3">{project.description}</p>
               </CardContent>
               <CardFooter className="p-6 pt-0">
-                <Button variant="outline" className="w-full border-accent text-accent hover:bg-accent hover:text-accent-foreground transition-colors">
+                <button className="btn w-full">
                   Detalhes
-                </Button>
+                </button>
               </CardFooter>
             </Card>
           </motion.div>

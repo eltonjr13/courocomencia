@@ -1,7 +1,7 @@
 
 "use client";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button"; // No longer using ShadCN Button here
 import { CheckCircle } from "lucide-react";
 import { useEffect, useRef } from "react";
 
@@ -113,8 +113,8 @@ const SharkFitHighlight = () => {
         >
           <div
             ref={playerWrapperRef}
-            className="relative overflow-hidden" // Removed rounded-lg, shadow-lg, border, border-border/50
-            style={{ paddingBottom: "56.25%", height: 0 }} // 16:9 Aspect Ratio container
+            className="relative overflow-hidden" 
+            style={{ paddingBottom: "56.25%", height: 0 }} 
           >
             <div id="youtube-player-sharkfit" className="absolute top-0 left-0 w-full h-full"></div>
           </div>
@@ -142,9 +142,9 @@ const SharkFitHighlight = () => {
             ))}
           </ul>
           <div className="mt-6">
-            <Button size="lg" variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground transition-all duration-300 ease-in-out transform hover:scale-105">
+            <button className="btn">
               Ver Projeto
-            </Button>
+            </button>
           </div>
         </motion.div>
       </div>

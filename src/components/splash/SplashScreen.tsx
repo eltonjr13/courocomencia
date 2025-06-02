@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface SplashScreenProps {
   onSplashFinished: () => void;
@@ -10,6 +11,7 @@ interface SplashScreenProps {
 export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     document.body.classList.add('no-scroll');
@@ -29,10 +31,12 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
         document.body.classList.remove('no-scroll');
         onSplashFinished();
         setIsVisible(false); 
+        // No automatic navigation to /projects here anymore
+        // The page will simply appear from the top
       }, 400); 
       return () => clearTimeout(timer);
     }
-  }, [isFadingOut, onSplashFinished]);
+  }, [isFadingOut, onSplashFinished, router]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -50,7 +54,7 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
       className={`fixed top-0 left-0 w-full h-screen bg-transparent flex items-center justify-center z-[9999] ${isFadingOut ? 'fade-out-splash' : ''}`}
     >
       <button
-        className="splash-btn flex items-center justify-center bg-white/10 text-white font-sans font-semibold rounded-full px-8 py-3 h-auto transition-all duration-300 ease-in-out hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-[#0A84FF] transform hover:scale-105 backdrop-blur-sm"
+        className="btn" // Apply the new standardized button class
         aria-label="Entrar no portfólio – Onde o couro tá comendo?"
         onClick={(e) => {
           e.stopPropagation(); 
@@ -64,4 +68,3 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
     </div>
   );
 }
-
