@@ -13,7 +13,6 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
 
   useEffect(() => {
     document.body.classList.add('no-scroll');
-    // Cleanup function to ensure 'no-scroll' is removed if the component unmounts unexpectedly
     return () => {
       document.body.classList.remove('no-scroll');
     };
@@ -24,34 +23,20 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
     setIsFadingOut(true);
   };
 
-  const handleScrollDownClick = () => {
-    const projectsSection = document.getElementById('projects');
-    if (projectsSection) {
-      projectsSection.scrollIntoView({ behavior: 'smooth' });
-    }
-    handleDismiss(); // This will trigger the fade-out and cleanup
-  };
-
   useEffect(() => {
     if (isFadingOut) {
       const timer = setTimeout(() => {
         document.body.classList.remove('no-scroll');
         onSplashFinished();
         setIsVisible(false); 
-      }, 400); // Matches the fade-out duration
+      }, 400); 
       return () => clearTimeout(timer);
     }
   }, [isFadingOut, onSplashFinished]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
-      // Differentiate based on which button is focused if needed, or assume primary action
       handleDismiss();
-    }
-  };
-   const handleScrollButtonKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      handleScrollDownClick();
     }
   };
 
@@ -76,18 +61,6 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
           tabIndex={0}
         >
           <span className="text-base">Onde o couro tá comendo?</span>
-        </button>
-        <button 
-          className="scroll-down-btn" 
-          aria-label="Ver projetos"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleScrollDownClick();
-          }}
-          onKeyDown={handleScrollButtonKeyDown}
-          tabIndex={0}
-        >
-          ↓
         </button>
       </div>
     </div>

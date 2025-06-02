@@ -16,7 +16,7 @@ export default function Home() {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); // Ensure client-side logic runs after mount
+    setIsClient(true); 
   }, []);
 
   const { scrollY } = useScroll();
@@ -45,17 +45,11 @@ export default function Home() {
     }
   });
   
-  useEffect(() => {
-    // This effect for overflowX is no longer needed as no-scroll class handles it
-    return () => {
-      // Ensure body styles are reset if component unmounts unexpectedly
-      // document.body.style.overflowX = ''; // Already handled by no-scroll removal
-    };
-  }, []);
+  const handleScrollToProjects = () => {
+    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   if (!isClient) {
-    // Render nothing or a basic loader until client is determined
-    // to prevent hydration mismatch with splash screen logic
     return null; 
   }
 
@@ -115,11 +109,21 @@ export default function Home() {
           >
             Spoiler: falhamos (mas com estilo)
           </motion.p>
+          <motion.button
+            className="scroll-down-btn"
+            aria-label="Ver projetos"
+            onClick={handleScrollToProjects}
+            initial={{ opacity: 0, y: 20 }}
+            animate={!splashScreenActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: !splashScreenActive ? 1.2 : 0 }}
+          >
+            ↓
+          </motion.button>
         </motion.div>
       </section>
 
       <motion.div
-        id="projects" // Added ID for scroll target
+        id="projects" 
         ref={projectsSectionRef}
         initial={{ opacity: 0, y: 50 }}
         animate={{ 
