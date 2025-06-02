@@ -175,6 +175,32 @@ body {
     outline-offset: 2px;
   }
 
+  .scroll-down-btn {
+    position: relative;
+    margin-top: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(6px);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 9999px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .scroll-down-btn:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+  }
+   .scroll-down-btn:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
 
   /* Splash Screen Fade-out */
   #splash-overlay.fade-out-splash {

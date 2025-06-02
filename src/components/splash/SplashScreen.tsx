@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 interface SplashScreenProps {
   onSplashFinished: () => void;
@@ -11,10 +10,10 @@ interface SplashScreenProps {
 export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     document.body.classList.add('no-scroll');
+    // Cleanup function to ensure 'no-scroll' is removed if the component unmounts unexpectedly
     return () => {
       document.body.classList.remove('no-scroll');
     };
@@ -25,22 +24,34 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
     setIsFadingOut(true);
   };
 
+  const handleScrollDownClick = () => {
+    const projectsSection = document.getElementById('projects');
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    handleDismiss(); // This will trigger the fade-out and cleanup
+  };
+
   useEffect(() => {
     if (isFadingOut) {
       const timer = setTimeout(() => {
         document.body.classList.remove('no-scroll');
         onSplashFinished();
         setIsVisible(false); 
-        // No automatic navigation to /projects here anymore
-        // The page will simply appear from the top
-      }, 400); 
+      }, 400); // Matches the fade-out duration
       return () => clearTimeout(timer);
     }
-  }, [isFadingOut, onSplashFinished, router]);
+  }, [isFadingOut, onSplashFinished]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
+      // Differentiate based on which button is focused if needed, or assume primary action
       handleDismiss();
+    }
+  };
+   const handleScrollButtonKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      handleScrollDownClick();
     }
   };
 
@@ -53,18 +64,32 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
       id="splash-overlay"
       className={`fixed top-0 left-0 w-full h-screen bg-transparent flex items-center justify-center z-[9999] ${isFadingOut ? 'fade-out-splash' : ''}`}
     >
-      <button
-        className="btn" // Apply the new standardized button class
-        aria-label="Entrar no portfólio – Onde o couro tá comendo?"
-        onClick={(e) => {
-          e.stopPropagation(); 
-          handleDismiss();
-        }}
-        onKeyDown={handleKeyDown}
-        tabIndex={0}
-      >
-        <span className="text-base">Onde o couro tá comendo?</span>
-      </button>
+      <div className="flex flex-col items-center">
+        <button
+          className="btn backdrop-blur-sm" 
+          aria-label="Entrar no portfólio – Onde o couro tá comendo?"
+          onClick={(e) => {
+            e.stopPropagation(); 
+            handleDismiss();
+          }}
+          onKeyDown={handleKeyDown}
+          tabIndex={0}
+        >
+          <span className="text-base">Onde o couro tá comendo?</span>
+        </button>
+        <button 
+          className="scroll-down-btn" 
+          aria-label="Ver projetos"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleScrollDownClick();
+          }}
+          onKeyDown={handleScrollButtonKeyDown}
+          tabIndex={0}
+        >
+          ↓
+        </button>
+      </div>
     </div>
   );
 }
