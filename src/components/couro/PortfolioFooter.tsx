@@ -66,8 +66,6 @@ const PortfolioFooter = () => {
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.7, delay: 0.2 }}
         >
-          CouroComencia: Eu, meu laptop e 37 abas abertas.
-          <br />
           Se funcionar, fui eu. Se quebrar… atualização em progresso!
         </motion.p>
         
