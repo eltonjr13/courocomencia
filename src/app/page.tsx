@@ -45,8 +45,28 @@ export default function Home() {
     }
   });
   
-  const handleScrollToProjects = () => {
-    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+  const slowScrollToProjects = () => {
+    const targetElement = document.getElementById('projects');
+    if (!targetElement) return;
+
+    const targetY = targetElement.getBoundingClientRect().top + window.scrollY;
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const duration = 1500; // 1.5 segundos para uma rolagem mais lenta
+    let startTime: number | null = null;
+
+    function step(currentTime: number) {
+      if (!startTime) startTime = currentTime;
+      const progress = Math.min((currentTime - (startTime as number)) / duration, 1);
+      // Easing function (easeOutQuad)
+      const easedProgress = progress * (2 - progress);
+      window.scrollTo(0, startY + distance * easedProgress);
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+    requestAnimationFrame(step);
   };
 
   if (!isClient) {
@@ -63,10 +83,10 @@ export default function Home() {
 
       <section 
         ref={heroRef} 
-        className="h-screen w-full relative p-4 overflow-hidden"
+        className="h-screen w-full relative p-4 overflow-hidden flex flex-col items-center justify-center" // Added flex for centering hero content
       >
         <motion.div 
-          className="fixed top-[40%] left-1/2 -translate-x-1/2 z-10 text-center flex flex-col items-center" 
+          className="text-center flex flex-col items-center" // Removed fixed positioning, will be centered by parent
           initial={{ opacity: 0 }} 
           animate={{ 
             opacity: !splashScreenActive && !isTextFadingOut ? 1 : 0 
@@ -110,9 +130,9 @@ export default function Home() {
             Spoiler: falhamos (mas com estilo)
           </motion.p>
           <motion.button
-            className="scroll-down-btn"
+            className="scroll-down-btn mt-16" // Aumentei a margem superior aqui
             aria-label="Ver projetos"
-            onClick={handleScrollToProjects}
+            onClick={slowScrollToProjects} // Atualizei para a função de rolagem lenta
             initial={{ opacity: 0, y: 20 }}
             animate={!splashScreenActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: !splashScreenActive ? 1.2 : 0 }}
