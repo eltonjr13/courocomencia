@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+// import { useRouter } from 'next/navigation'; // Not needed for this request
 
 interface SplashScreenProps {
   onSplashFinished: () => void;
@@ -10,14 +11,14 @@ interface SplashScreenProps {
 export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  // const router = useRouter(); // Not needed for this request
 
   useEffect(() => {
     document.body.classList.add('no-scroll');
-    // Cleanup function to remove no-scroll if component unmounts for any reason
     return () => {
       document.body.classList.remove('no-scroll');
     };
-  }, []); // Runs once on mount and cleanup on unmount
+  }, []);
 
   const handleDismiss = () => {
     if (isFadingOut) return;
@@ -27,10 +28,11 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
   useEffect(() => {
     if (isFadingOut) {
       const timer = setTimeout(() => {
-        document.body.classList.remove('no-scroll'); // Remove scroll lock before finishing
+        document.body.classList.remove('no-scroll');
         onSplashFinished();
-        setIsVisible(false); // Allow parent to unmount, or hide if not unmounted
-      }, 600); // Match CSS animation duration
+        // router.push('/projects'); // Navigation removed as per current request focusing on style
+        setIsVisible(false); 
+      }, 600); 
       return () => clearTimeout(timer);
     }
   }, [isFadingOut, onSplashFinished]);
@@ -49,13 +51,13 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
     <div
       id="splash-overlay"
       className={`fixed top-0 left-0 w-full h-screen bg-transparent flex items-center justify-center z-[9999] ${isFadingOut ? 'fade-out-splash' : ''}`}
-      onClick={handleDismiss} // Allow clicking anywhere on overlay to dismiss
+      // onClick={handleDismiss} // Removed: only button dismisses
     >
       <button
-        className="splash-btn font-bold"
+        className="splash-btn" // Removed font-bold
         aria-label="Entrar no portfólio"
         onClick={(e) => {
-          e.stopPropagation(); // Prevent overlay click if button is clicked directly
+          e.stopPropagation(); 
           handleDismiss();
         }}
         onKeyDown={handleKeyDown}
