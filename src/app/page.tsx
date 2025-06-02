@@ -119,6 +119,7 @@ export default function Home() {
       </section>
 
       <motion.div
+        id="projects" // Added ID for scroll target
         ref={projectsSectionRef}
         initial={{ opacity: 0, y: 50 }}
         animate={{ 

@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; 
 
 interface SplashScreenProps {
   onSplashFinished: () => void;
@@ -11,7 +10,6 @@ interface SplashScreenProps {
 export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const router = useRouter(); 
 
   useEffect(() => {
     document.body.classList.add('no-scroll');
@@ -30,12 +28,17 @@ export default function SplashScreen({ onSplashFinished }: SplashScreenProps) {
       const timer = setTimeout(() => {
         document.body.classList.remove('no-scroll');
         onSplashFinished();
-        router.push('/projects'); 
+        
+        const projectsSection = document.getElementById('projects');
+        if (projectsSection) {
+          projectsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        
         setIsVisible(false); 
       }, 400); 
       return () => clearTimeout(timer);
     }
-  }, [isFadingOut, onSplashFinished, router]);
+  }, [isFadingOut, onSplashFinished]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
