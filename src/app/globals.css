@@ -1,0 +1,239 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Global Scrollbar Styles */
+/* WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px; /* For horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsla(var(--muted-foreground), 0.6); /* Using theme muted-foreground color with opacity */
+  border-radius: 3px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsla(var(--muted-foreground), 0.9); /* More opaque on hover */
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: hsla(var(--muted-foreground), 0.6) transparent; /* thumb color track color */
+}
+
+
+body {
+  font-family: 'Space Grotesk', Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 0%; /* Pure Black #000000 */
+    --foreground: 0 0% 87.8%; /* Off-white/Light Gray #E0E0E0 */
+    
+    --card: 0 0% 7%; /* Slightly lighter than background for cards */
+    --card-foreground: 0 0% 87.8%;
+    
+    --popover: 0 0% 7%; /* Similar to card */
+    --popover-foreground: 0 0% 87.8%;
+    
+    --primary: 0 0% 87.8%; /* Primary interactive elements, using foreground color */
+    --primary-foreground: 0 0% 0%; /* Text on primary elements, using background color */
+    
+    --secondary: 0 0% 15%; /* Secondary elements, slightly lighter black */
+    --secondary-foreground: 0 0% 87.8%;
+    
+    --muted: 0 0% 10%; /* Muted elements */
+    --muted-foreground: 0 0% 55%; /* Muted text, less bright gray */
+    
+    --accent: 207 90% 68%; /* Faint Neon Blue #64B5F6 */
+    --accent-foreground: 0 0% 0%; /* Text on accent elements, typically dark for contrast with bright accent */
+    
+    --destructive: 0 84.2% 60.2%; /* Default destructive red */
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 0 0% 20%; /* Borders, slightly lighter than secondary */
+    --input: 0 0% 20%; /* Input fields background */
+    --ring: 207 90% 68%; /* Ring color, using accent */
+
+    --chart-1: 207 90% 68%;
+    --chart-2: 207 80% 58%;
+    --chart-3: 207 70% 48%;
+    --chart-4: 207 60% 38%;
+    --chart-5: 207 50% 28%;
+
+    --radius: 0.5rem;
+
+    /* Sidebar variables adapted to the new theme */
+    --sidebar-background: 0 0% 5%; /* Darker shade for sidebar */
+    --sidebar-foreground: 0 0% 75%; /* Sidebar text */
+    --sidebar-primary: 207 90% 68%; /* Sidebar primary action, using accent */
+    --sidebar-primary-foreground: 0 0% 0%; /* Text on sidebar primary action */
+    --sidebar-accent: 0 0% 12%; /* Sidebar accent, e.g., hover */
+    --sidebar-accent-foreground: 0 0% 90%; /* Text on sidebar accent */
+    --sidebar-border: 0 0% 15%; /* Sidebar border */
+    --sidebar-ring: 207 90% 68%; /* Sidebar ring, using accent */
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 87.8%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 87.8%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 87.8%;
+    --primary: 0 0% 87.8%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 87.8%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 207 90% 68%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 70% 50%; /* Adjusted destructive for dark theme */
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 207 90% 68%;
+    
+    --chart-1: 207 90% 68%;
+    --chart-2: 207 80% 58%;
+    --chart-3: 207 70% 48%;
+    --chart-4: 207 60% 38%;
+    --chart-5: 207 50% 28%;
+
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 0 0% 75%;
+    --sidebar-primary: 207 90% 68%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 12%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 207 90% 68%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  body.no-scroll {
+    overflow: hidden; /* disables scrolling */
+    height: 100vh; /* prevents “rubber-band” on mobile */
+  }
+}
+
+@layer utilities {
+  .text-shadow-subtle-hero {
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
+  }
+
+  @keyframes slowPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+  }
+
+  .hero-title-pulse {
+    animation: slowPulse 4s ease-in-out 1.5s infinite;
+  }
+
+  .hero-subtitle-pulse {
+    animation: slowPulse 5s ease-in-out 2s infinite;
+  }
+  
+  @keyframes pulse { /* For intro prompt, if still needed */
+    0%,100% { opacity: 0.6; transform: scale(1); }
+    50%     { opacity: 1;   transform: scale(1.05); }
+  }
+  .intro-prompt { /* For intro prompt, if still needed */
+    animation: pulse 2s ease-in-out infinite; 
+  }
+}
+
+@layer components {
+  .project-banner-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    overflow: hidden; /* Crucial for child image and border-radius */
+  }
+  /* .project-banner class is available if specific overrides are needed
+     beyond what next/image fill + object-cover/center provide. */
+  .project-banner {} 
+
+  /* Standardized Button Style */
+  .btn {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(6px);
+    color: #FFFFFF;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: background 0.3s, transform 0.3s;
+    border: none; /* Ensure no default browser border */
+    cursor: pointer;
+    display: inline-flex; /* For proper centering of text */
+    align-items: center;
+    justify-content: center;
+    text-decoration: none; /* Remove underline from potential <a> tags used as buttons */
+  }
+
+  .btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+  /* Add focus-visible styles for accessibility if needed */
+  .btn:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  .scroll-down-btn {
+    position: relative;
+    /* margin-top is now handled by Tailwind class in page.tsx */
+    width: 2.5rem;
+    height: 2.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(6px);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 9999px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .scroll-down-btn:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+  }
+   .scroll-down-btn:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+
+  /* Splash Screen Fade-out */
+  #splash-overlay.fade-out-splash {
+    opacity: 0;
+    transition: opacity 0.4s ease; 
+    pointer-events: none;
+  }
+}
