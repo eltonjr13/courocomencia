@@ -3,47 +3,24 @@
 import ProjectShowcaseSection from "@/components/couro/ProjectShowcaseSection";
 import PortfolioFooter from "@/components/couro/PortfolioFooter";
 import SplashScreen from "@/components/splash/SplashScreen";
-import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
-  const [isTextFadingOut, setIsTextFadingOut] = useState(false);
-  const [showProjects, setShowProjects] = useState(false);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const projectsSectionRef = useRef<HTMLDivElement>(null);
-  
   const [splashScreenActive, setSplashScreenActive] = useState(true);
   const [isClient, setIsClient] = useState(false);
-
+  const heroRef = useRef<HTMLDivElement>(null);
+  
   useEffect(() => {
     setIsClient(true); 
   }, []);
 
   const { scrollY } = useScroll();
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    if (heroRef.current) {
-      const currentHeroHeight = heroRef.current.offsetHeight;
-      if (currentHeroHeight > 0 && latest > currentHeroHeight * 0.8) {
-        setShowProjects(true);
-      } else {
-        setShowProjects(false);
-      }
-    }
-
-    if (projectsSectionRef.current) {
-      const projectsSectionRect = projectsSectionRef.current.getBoundingClientRect();
-      const viewportMiddle = window.innerHeight / 2;
-      
-      if (projectsSectionRect.top <= viewportMiddle) {
-        setIsTextFadingOut(true);
-      } else {
-        setIsTextFadingOut(false);
-      }
-    } else {
-      setIsTextFadingOut(false);
-    }
-  });
+  // Define the scroll range for hero text fade-out
+  // Fade out over the first 60% of the viewport height scroll
+  const heroFadeEndScrollY = isClient ? window.innerHeight * 0.6 : 300; 
+  const heroTextOpacity = useTransform(scrollY, [0, heroFadeEndScrollY], [1, 0]);
   
   const slowScrollToProjects = () => {
     const targetElement = document.getElementById('projects');
@@ -52,13 +29,12 @@ export default function Home() {
     const targetY = targetElement.getBoundingClientRect().top + window.scrollY;
     const startY = window.scrollY;
     const distance = targetY - startY;
-    const duration = 1500; // 1.5 segundos para uma rolagem mais lenta
+    const duration = 1500; 
     let startTime: number | null = null;
 
     function step(currentTime: number) {
       if (!startTime) startTime = currentTime;
       const progress = Math.min((currentTime - (startTime as number)) / duration, 1);
-      // Easing function (easeOutQuad)
       const easedProgress = progress * (2 - progress);
       window.scrollTo(0, startY + distance * easedProgress);
 
@@ -70,7 +46,13 @@ export default function Home() {
   };
 
   if (!isClient) {
-    return null; 
+    // Return a basic layout or null to prevent hydration errors before client-side effects run
+    return (
+      <main className="flex min-h-screen flex-col items-center bg-transparent text-foreground w-full relative z-[2]">
+        <div className="h-screen w-full fixed top-0 left-0" /> 
+        <div className="mt-[100vh] w-full" />
+      </main>
+    );
   }
 
   return (
@@ -83,14 +65,13 @@ export default function Home() {
 
       <section 
         ref={heroRef} 
-        className="h-screen w-full relative p-4 overflow-hidden flex flex-col items-center justify-center"
+        className="h-screen w-full fixed top-0 left-0 z-[5] p-4 overflow-hidden flex flex-col items-center justify-center"
       >
         <motion.div 
           className="text-center flex flex-col items-center"
           initial={{ opacity: 0 }} 
-          animate={{ 
-            opacity: !splashScreenActive && !isTextFadingOut ? 1 : 0 
-          }} 
+          animate={{ opacity: !splashScreenActive ? 1 : 0 }}
+          style={{ opacity: !splashScreenActive ? heroTextOpacity : undefined }} // Apply scroll-driven fade after initial animation
           transition={{ duration: 0.5, delay: !splashScreenActive ? 0.3 : 0 }} 
         >
           <motion.h1 
@@ -144,14 +125,13 @@ export default function Home() {
 
       <motion.div
         id="projects" 
-        ref={projectsSectionRef}
+        className="mt-[100vh] w-full relative z-[3]" // Ensure projects are above particles but below hero text if overlap occurs visually
         initial={{ opacity: 0, y: 50 }}
         animate={{ 
-          opacity: !splashScreenActive && showProjects ? 1 : 0, 
-          y: !splashScreenActive && showProjects ? 0 : 50 
+          opacity: !splashScreenActive ? 1 : 0, 
+          y: !splashScreenActive ? 0 : 50 
         }}
         transition={{ duration: 0.8, ease: "easeOut", delay: !splashScreenActive ? 0.1 : 0 }}
-        className="w-full"
       >
         <ProjectShowcaseSection />
       </motion.div>
