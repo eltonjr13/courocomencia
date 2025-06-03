@@ -3,6 +3,34 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Global Scrollbar Styles */
+/* WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px; /* For horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsla(var(--accent), 0.6); /* Using theme accent color with opacity */
+  border-radius: 3px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsla(var(--accent), 0.9); /* More opaque on hover */
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: hsla(var(--accent), 0.6) transparent; /* thumb color track color */
+}
+
+
 body {
   font-family: 'Space Grotesk', Arial, Helvetica, sans-serif;
 }
@@ -177,7 +205,7 @@ body {
 
   .scroll-down-btn {
     position: relative;
-    margin-top: 1.5rem;
+    /* margin-top is now handled by Tailwind class in page.tsx */
     width: 2.5rem;
     height: 2.5rem;
     background: rgba(255, 255, 255, 0.08);

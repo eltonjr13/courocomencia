@@ -60,7 +60,7 @@ const OtherProjectsSection = () => {
       >
         Outros Projetos Notáveis
       </motion.h2>
-      <div className="flex overflow-x-auto space-x-6 pb-6 -mx-4 px-4 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-accent scrollbar-track-transparent">
+      <div className="flex overflow-x-auto space-x-6 pb-6 -mx-4 px-4 snap-x snap-mandatory">
         {projects.map((project, index) => (
           <motion.div
             key={index}
@@ -89,7 +89,7 @@ const OtherProjectsSection = () => {
                   href={project.url} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-full" // Make the anchor take full width of the footer's button area
+                  className="w-full" 
                   aria-label={`Ver detalhes do projeto ${project.title}`}
                 >
                   <button className="btn w-full"> 
@@ -101,24 +101,6 @@ const OtherProjectsSection = () => {
           </motion.div>
         ))}
       </div>
-      <style jsx global>{`
-        .scrollbar-thin {
-          scrollbar-width: thin;
-          scrollbar-color: hsl(var(--accent)) transparent;
-        }
-        .scrollbar-thin::-webkit-scrollbar {
-          height: 8px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-          background-color: hsl(var(--accent));
-          border-radius: 10px;
-          border: 2px solid transparent; 
-          background-clip: content-box;
-        }
-      `}</style>
     </motion.div>
   );
 };
