@@ -29,13 +29,13 @@ export default function Home() {
     const targetY = targetElement.getBoundingClientRect().top + window.scrollY;
     const startY = window.scrollY;
     const distance = targetY - startY;
-    const duration = 1500; 
+    const duration = 2000; // Increased duration for slower scroll
     let startTime: number | null = null;
 
     function step(currentTime: number) {
       if (!startTime) startTime = currentTime;
       const progress = Math.min((currentTime - (startTime as number)) / duration, 1);
-      const easedProgress = progress * (2 - progress);
+      const easedProgress = progress * (2 - progress); // Ease-out quadratic
       window.scrollTo(0, startY + distance * easedProgress);
 
       if (progress < 1) {
