@@ -109,7 +109,7 @@ export default function Home() {
             className="font-semibold font-body mb-2 md:mb-3 hero-subtitle-pulse"
             style={{ 
               fontSize: 'clamp(1.02rem, 2.55vw, 1.36rem)', 
-              color: '#FFFFFF',
+              color: 'rgba(255, 255, 255, 0.9)',
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={!splashScreenActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -121,7 +121,7 @@ export default function Home() {
             className="font-semibold font-body hero-subtitle-pulse"
             style={{ 
               fontSize: 'clamp(0.816rem, 2.04vw, 1.088rem)', 
-              color: '#FFFFFF',
+              color: 'rgba(255, 255, 255, 0.9)',
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={!splashScreenActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
