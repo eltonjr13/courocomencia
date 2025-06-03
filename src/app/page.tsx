@@ -83,10 +83,10 @@ export default function Home() {
 
       <section 
         ref={heroRef} 
-        className="h-screen w-full relative p-4 overflow-hidden flex flex-col items-center justify-center" // Added flex for centering hero content
+        className="h-screen w-full relative p-4 overflow-hidden flex flex-col items-center justify-center"
       >
         <motion.div 
-          className="text-center flex flex-col items-center" // Removed fixed positioning, will be centered by parent
+          className="text-center flex flex-col items-center"
           initial={{ opacity: 0 }} 
           animate={{ 
             opacity: !splashScreenActive && !isTextFadingOut ? 1 : 0 
@@ -103,12 +103,12 @@ export default function Home() {
             animate={!splashScreenActive ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: !splashScreenActive ? 0.6 : 0 }}
           >
-            CouroComencia
+            CouroComencia.
           </motion.h1>
           <motion.p 
             className="font-semibold font-body mb-2 md:mb-3 hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', 
+              fontSize: 'clamp(1.02rem, 2.55vw, 1.36rem)', 
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
@@ -120,7 +120,7 @@ export default function Home() {
           <motion.p 
             className="font-semibold font-body hero-subtitle-pulse"
             style={{ 
-              fontSize: 'clamp(0.96rem, 2.4vw, 1.28rem)', 
+              fontSize: 'clamp(0.816rem, 2.04vw, 1.088rem)', 
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
@@ -130,9 +130,9 @@ export default function Home() {
             Spoiler: falhamos (mas com estilo)
           </motion.p>
           <motion.button
-            className="scroll-down-btn mt-16" // Aumentei a margem superior aqui
+            className="scroll-down-btn mt-16"
             aria-label="Ver projetos"
-            onClick={slowScrollToProjects} // Atualizei para a função de rolagem lenta
+            onClick={slowScrollToProjects}
             initial={{ opacity: 0, y: 20 }}
             animate={!splashScreenActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: !splashScreenActive ? 1.2 : 0 }}
