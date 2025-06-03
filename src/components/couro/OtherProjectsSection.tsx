@@ -2,7 +2,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-// import { Button } from "@/components/ui/button"; // No longer using ShadCN Button here
+import Link from 'next/link'; // Import Link for Next.js client-side navigation if needed internally, otherwise regular <a> for external.
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 const projects = [
@@ -11,21 +11,24 @@ const projects = [
     description: "Chatbot inteligente baseado em IA para atendimento, respondendo dúvidas técnicas e gerando conteúdos automáticos como e-mails e descrições de produtos.",
     image: "/imgs/AI-ASSIST-CHATBOT.jpg",
     alt: "AI-Assist ChatBot Banner",
-    aiHint: "chatbot interface"
+    aiHint: "chatbot interface",
+    url: "https://github.com/eltonjr13/copywriterSpecialistMessageGenerator"
   },
   {
     title: "CNPJ Insights",
     description: "Ferramenta que busca dados de empresas pelo CNPJ, exibindo informações como nome, sócios, contatos e ramo de atuação.",
     image: "/imgs/CNPJ-INSIGHTS.JPG.jpg",
     alt: "CNPJ Insights Banner",
-    aiHint: "data analytics"
+    aiHint: "data analytics",
+    url: "https://github.com/eltonjr13/BuscaSocios"
   },
   {
     title: "Maps for All",
     description: "Aplicativo que, ao informar um nicho e uma cidade, retorna empresas do segmento com dados de contato, sócios e localização.",
     image: "/imgs/MapsForAll.jpg.jpg",
     alt: "Maps for All Banner",
-    aiHint: "map application"
+    aiHint: "map application",
+    url: "https://github.com/eltonjr13/MapsForAll-1.1"
   }
 ];
 
@@ -50,7 +53,7 @@ const OtherProjectsSection = () => {
     >
       <motion.h2 
         className="text-3xl md:text-4xl font-headline mb-10 md:mb-12 text-center text-primary"
-        variants={cardVariants} // Use cardVariants for individual animation trigger
+        variants={cardVariants} 
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.5 }}
@@ -82,9 +85,17 @@ const OtherProjectsSection = () => {
                 <p className="text-muted-foreground text-sm line-clamp-3">{project.description}</p>
               </CardContent>
               <CardFooter className="p-6 pt-0">
-                <button className="btn w-full">
-                  Detalhes
-                </button>
+                <a 
+                  href={project.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-full" // Make the anchor take full width of the footer's button area
+                  aria-label={`Ver detalhes do projeto ${project.title}`}
+                >
+                  <button className="btn w-full"> 
+                    Detalhes
+                  </button>
+                </a>
               </CardFooter>
             </Card>
           </motion.div>
