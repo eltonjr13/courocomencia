@@ -16,6 +16,10 @@ interface Particle {
 
   twinkleOffset: number;
   twinkleDuration: number;
+
+  // Properties for mouse attraction (magnet effect)
+  attractionVx: number;
+  attractionVy: number;
 }
 
 // Configuration
@@ -43,8 +47,10 @@ const FAR_PARTICLE_SPEED_PX_S_MAX = 4;
 const INITIAL_FADE_IN_DURATION = 1000;
 const MOBILE_BREAKPOINT = 768;
 
-// Mouse Interaction Configuration
-const LERP_FACTOR = 0.05; // Adjust for follow speed (0.01 = slow, 0.1 = fast)
+// Mouse Interaction Configuration for "Magnet" Effect
+const MOUSE_ATTRACTION_RADIUS = 180; // Radius of mouse influence
+const ATTRACTION_FORCE_MULTIPLIER = 0.1; // Strength of attraction
+const PARTICLE_DAMPING = 0.92; // How quickly particles lose attraction-induced velocity (0-1, lower is faster damping)
 
 
 const pxPerSecondToPxPerFrame = (px_s: number) => px_s / 60;
@@ -92,6 +98,8 @@ const FloatingParticles: React.FC = () => {
       isNear,
       twinkleOffset: Math.random() * Math.PI * 2,
       twinkleDuration: 3000 + Math.random() * 2000,
+      attractionVx: 0,
+      attractionVy: 0,
     };
   }, []);
 
@@ -130,14 +138,14 @@ const FloatingParticles: React.FC = () => {
     const resizeObserver = new ResizeObserver(entries => {
       for (let entry of entries) {
         const {width, height} = entry.contentRect;
-        if (canvasRef.current) { // Check if canvasRef.current is not null
+        if (canvasRef.current) { 
           canvasRef.current.width = width;
           canvasRef.current.height = height;
           initParticles(); 
         }
       }
     });
-    if (canvas) { // Check if canvas is not null before observing
+    if (canvas) { 
         resizeObserver.observe(canvas);
     }
     
@@ -185,25 +193,44 @@ const FloatingParticles: React.FC = () => {
       const initialElapsedTime = now - pageLoadTime.current;
 
       particlesArray.current.forEach(particle => {
+        let forceDx = 0;
+        let forceDy = 0;
+
         if (!isMobile && mouse.current.x !== null && mouse.current.y !== null) {
-          // Particles follow the mouse
-          const targetX = mouse.current.x;
-          const targetY = mouse.current.y;
+          const dxToMouse = mouse.current.x - particle.x;
+          const dyToMouse = mouse.current.y - particle.y;
+          const distanceToMouseSquared = dxToMouse * dxToMouse + dyToMouse * dyToMouse;
+          const distanceToMouse = Math.sqrt(distanceToMouseSquared);
 
-          particle.x += (targetX - particle.x) * LERP_FACTOR;
-          particle.y += (targetY - particle.y) * LERP_FACTOR;
-        
-        } else {
-          // Original random movement when mouse is not active or on mobile
-          particle.x += particle.speedX;
-          particle.y += particle.speedY;
-
-          // Boundary conditions
-          if (particle.x > canvas.width + particle.size) particle.x = -particle.size;
-          else if (particle.x < -particle.size) particle.x = canvas.width + particle.size;
-          if (particle.y > canvas.height + particle.size) particle.y = -particle.size;
-          else if (particle.y < -particle.size) particle.y = canvas.height + particle.size;
+          if (distanceToMouse < MOUSE_ATTRACTION_RADIUS && distanceToMouse > 0) {
+            const angleToMouse = Math.atan2(dyToMouse, dxToMouse);
+            // Force is stronger when closer, diminishes with distance
+            const forceStrength = (MOUSE_ATTRACTION_RADIUS - distanceToMouse) / MOUSE_ATTRACTION_RADIUS * ATTRACTION_FORCE_MULTIPLIER;
+            
+            forceDx = Math.cos(angleToMouse) * forceStrength;
+            forceDy = Math.sin(angleToMouse) * forceStrength;
+          }
         }
+
+        // Add attraction force to particle's attraction velocity
+        particle.attractionVx += forceDx;
+        particle.attractionVy += forceDy;
+
+        // Apply damping to the attraction velocity
+        particle.attractionVx *= PARTICLE_DAMPING;
+        particle.attractionVy *= PARTICLE_DAMPING;
+        
+        // Update particle position with its own speed and attraction-induced speed
+        particle.x += particle.speedX + particle.attractionVx;
+        particle.y += particle.speedY + particle.attractionVy;
+
+
+        // Boundary conditions
+        if (particle.x > canvas.width + particle.size) particle.x = -particle.size;
+        else if (particle.x < -particle.size) particle.x = canvas.width + particle.size;
+        if (particle.y > canvas.height + particle.size) particle.y = -particle.size;
+        else if (particle.y < -particle.size) particle.y = canvas.height + particle.size;
+        
 
         let interactiveOpacityTarget = particle.baseOpacity;
         if (!particle.isNear) {
@@ -277,7 +304,7 @@ const FloatingParticles: React.FC = () => {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [isClient, createParticle, initParticles, isMobile]); // initParticles dependency is important here
+  }, [isClient, createParticle, initParticles, isMobile]);
 
 
   return (
@@ -289,3 +316,4 @@ const FloatingParticles: React.FC = () => {
 };
 
 export default FloatingParticles;
+
