@@ -49,8 +49,8 @@ const MOBILE_BREAKPOINT = 768;
 
 // Mouse Interaction Configuration
 const MOUSE_ATTRACTION_RADIUS = 150; // Pixels: how close mouse needs to be to affect particles
-const ATTRACTION_FORCE = 0.03;      // Strength of attraction pull towards mouse
-const PARTICLE_INERTIA = 0.92;      // Higher = less friction, effect lasts longer (0 to 1)
+const ATTRACTION_FORCE = 0.08;      // Strength of attraction pull towards mouse (Increased from 0.03)
+const PARTICLE_INERTIA = 0.90;      // Higher = less friction, effect lasts longer (0 to 1) (Decreased from 0.92 for more damping)
 
 
 const pxPerSecondToPxPerFrame = (px_s: number) => px_s / 60;
@@ -140,9 +140,13 @@ const FloatingParticles: React.FC = () => {
         const {width, height} = entry.contentRect;
         canvas.width = width;
         canvas.height = height;
+        initParticles(); // Re-initialize particles on resize
       }
     });
     resizeObserver.observe(canvas);
+    
+    // Initial particles creation moved here to ensure it happens after observer is set up
+    // and canvas has initial dimensions from layout.
     initParticles();
 
 
@@ -159,17 +163,21 @@ const FloatingParticles: React.FC = () => {
     };
 
     window.addEventListener('mousemove', handleMouseMove);
+    // Listen for mouse leave on the canvas itself, or a wrapper, if more precise behavior is needed
+    // For full-screen canvas, window.mouseleave is acceptable.
     window.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
-      resizeObserver.unobserve(canvas);
+      if (canvas) { // Ensure canvas still exists for unobserve
+        resizeObserver.unobserve(canvas);
+      }
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseleave', handleMouseLeave);
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [isClient, initParticles, isMobile]);
+  }, [isClient, initParticles, isMobile]); // initParticles dependency is important here
 
   useEffect(() => {
     if (!isClient || !canvasRef.current) return;
@@ -179,14 +187,12 @@ const FloatingParticles: React.FC = () => {
     if (!ctx) return;
 
     const animate = () => {
-      if (!canvasRef.current) return;
+      if (!canvasRef.current) return; // Ensure canvas is still there
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       const now = Date.now();
       const initialElapsedTime = now - pageLoadTime.current;
 
-      // Update particles first (position, attraction, opacity)
       particlesArray.current.forEach(particle => {
-        // Mouse attraction logic
         if (!isMobile && mouse.current.x !== null && mouse.current.y !== null) {
           const dxMouse = mouse.current.x - particle.x;
           const dyMouse = mouse.current.y - particle.y;
@@ -194,7 +200,7 @@ const FloatingParticles: React.FC = () => {
 
           if (distanceMouseSq < MOUSE_ATTRACTION_RADIUS * MOUSE_ATTRACTION_RADIUS) {
             const distanceMouse = Math.sqrt(distanceMouseSq);
-            if (distanceMouse > 1) { // Avoid division by zero or too strong force if exactly on particle
+            if (distanceMouse > 1) { 
               const pullForceX = (dxMouse / distanceMouse) * ATTRACTION_FORCE;
               const pullForceY = (dyMouse / distanceMouse) * ATTRACTION_FORCE;
               particle.attractionVx += pullForceX;
@@ -203,21 +209,17 @@ const FloatingParticles: React.FC = () => {
           }
         }
 
-        // Apply inertia to attraction velocity
         particle.attractionVx *= PARTICLE_INERTIA;
         particle.attractionVy *= PARTICLE_INERTIA;
 
-        // Update particle position using base speed and attraction speed
         particle.x += particle.speedX + particle.attractionVx;
         particle.y += particle.speedY + particle.attractionVy;
 
-        // Boundary checks (wrap around screen)
         if (particle.x > canvas.width + particle.size) particle.x = -particle.size;
         else if (particle.x < -particle.size) particle.x = canvas.width + particle.size;
         if (particle.y > canvas.height + particle.size) particle.y = -particle.size;
         else if (particle.y < -particle.size) particle.y = canvas.height + particle.size;
 
-        // Opacity calculation
         let interactiveOpacityTarget = particle.baseOpacity;
         if (!particle.isNear) {
             const twinkleAmplitude = Math.max(0, 0.9 - particle.baseOpacity);
@@ -231,11 +233,10 @@ const FloatingParticles: React.FC = () => {
         } else {
           finalOpacity = interactiveOpacityTarget;
         }
-        particle.currentOpacity += (finalOpacity - particle.currentOpacity) * 0.1; // Smooth transition
+        particle.currentOpacity += (finalOpacity - particle.currentOpacity) * 0.1;
       });
 
 
-      // Draw connecting lines
       ctx.lineWidth = PARTICLE_STROKE_WIDTH;
       ctx.filter = 'blur(0.5px)';
       for (let i = 0; i < particlesArray.current.length; i++) {
@@ -248,7 +249,6 @@ const FloatingParticles: React.FC = () => {
 
           if (distance < CONNECT_DISTANCE) {
             const lineOpacityFactor = (1 - distance / CONNECT_DISTANCE);
-            // Use the minimum current opacity of the two connected particles for the line, scaled by distance
             const baseLineDynamicOpacity = Math.min(p1.currentOpacity, p2.currentOpacity) * LINE_BASE_OPACITY;
             const finalLineOpacity = Math.max(0, Math.min(1, baseLineDynamicOpacity * lineOpacityFactor));
 
@@ -259,7 +259,7 @@ const FloatingParticles: React.FC = () => {
                  effectiveLineOpacity = finalLineOpacity;
             }
 
-            if (effectiveLineOpacity > 0.01) { // Threshold to avoid drawing almost invisible lines
+            if (effectiveLineOpacity > 0.01) { 
               ctx.beginPath();
               ctx.moveTo(p1.x, p1.y);
               ctx.lineTo(p2.x, p2.y);
@@ -271,10 +271,9 @@ const FloatingParticles: React.FC = () => {
       }
       ctx.filter = 'none';
 
-      // Draw particles
       particlesArray.current.forEach(particle => {
         const opacityToDraw = Math.max(0, Math.min(1, particle.currentOpacity));
-        if (opacityToDraw > 0.01) { // Threshold to avoid drawing almost invisible particles
+        if (opacityToDraw > 0.01) { 
             ctx.beginPath();
             ctx.arc(particle.x, particle.y, particle.size / 2, 0, Math.PI * 2);
             ctx.strokeStyle = `rgba(${ACCENT_COLOR_RGB_STRING}, ${opacityToDraw})`;
@@ -293,7 +292,7 @@ const FloatingParticles: React.FC = () => {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [isClient, createParticle, initParticles, isMobile]); // initParticles was missing
+  }, [isClient, createParticle, initParticles, isMobile]); 
 
 
   return (
@@ -305,5 +304,3 @@ const FloatingParticles: React.FC = () => {
 };
 
 export default FloatingParticles;
-
-    
