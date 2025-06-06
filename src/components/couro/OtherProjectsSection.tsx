@@ -9,7 +9,7 @@ const projects = [
   {
     title: "AI-Assist ChatBot",
     description: "Chatbot inteligente baseado em IA para atendimento, respondendo dúvidas técnicas e gerando conteúdos automáticos como e-mails e descrições de produtos.",
-    image: "https://i.imgur.com/AJKPTd0.png",
+    image: "/imgs/AI-ASSIST-CHATBOT.jpg",
     alt: "AI-Assist ChatBot Banner",
     aiHint: "chatbot interface",
     url: "https://github.com/eltonjr13/copywriterSpecialistMessageGenerator"

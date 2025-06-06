@@ -1,6 +1,6 @@
+
 "use client";
 import { motion } from "framer-motion";
-// import { Button } from "@/components/ui/button"; // No longer using ShadCN Button here
 import { CheckCircle } from "lucide-react";
 import { useEffect, useRef } from "react";
 
@@ -141,9 +141,15 @@ const SharkFitHighlight = () => {
             ))}
           </ul>
           <div className="mt-6">
-            <button className="btn">
+            <a
+              href="https://github.com/eltonjr13/SharkFit-App" // URL de exemplo para o projeto
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn"
+              aria-label="Ver detalhes do projeto SharkFit"
+            >
               Ver Projeto
-            </button>
+            </a>
           </div>
         </motion.div>
       </div>
