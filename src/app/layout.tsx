@@ -5,8 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import FloatingParticles from "@/components/hero/FloatingParticles";
 
 export const metadata: Metadata = {
-  title: 'CouroComencia - Dynamic Persona',
-  description: 'Portfolio dinâmico explorando design, estratégia e tecnologia.',
+  title: 'CouroComencia - Dynamic',
+  description: 'Projetos que geram resultados reais.',
   icons: {
     icon: '/imgs/favicon.png', // Updated path to the favicon
   },
