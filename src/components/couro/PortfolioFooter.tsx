@@ -28,12 +28,12 @@ const PortfolioFooter = () => {
       <div className="container mx-auto px-4 text-center">
         <div className="flex justify-center mb-6 md:mb-8">
           <Image 
-            src="/imgs/logo-rocket.png" 
+            src="https://i.imgur.com/AJKPTd0.png" 
             alt="CouroComencia Logo" 
             width={100} 
             height={100} 
             className="object-contain"
-            data-ai-hint="rocket logo" 
+            data-ai-hint="chatbot interface" 
           />
         </div>
         <motion.p 
