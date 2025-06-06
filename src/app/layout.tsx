@@ -7,6 +7,9 @@ import FloatingParticles from "@/components/hero/FloatingParticles";
 export const metadata: Metadata = {
   title: 'CouroComencia - Dynamic Persona',
   description: 'Portfolio dinâmico explorando design, estratégia e tecnologia.',
+  icons: {
+    icon: '/favicon.png', // Assuming you saved the image as favicon.png in the public folder
+  },
 };
 
 export default function RootLayout({
