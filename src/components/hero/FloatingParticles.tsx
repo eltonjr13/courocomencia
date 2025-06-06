@@ -83,7 +83,6 @@ const FloatingParticles: React.FC = () => {
     const angle = Math.random() * Math.PI * 2;
     const speedX = Math.cos(angle) * speedMagnitude;
     const speedY = Math.sin(angle) * speedMagnitude;
-
     const baseOpacity = isNear ? NEAR_PARTICLE_BASE_OPACITY : FAR_PARTICLE_BASE_OPACITY;
 
     return {
@@ -131,7 +130,6 @@ const FloatingParticles: React.FC = () => {
 
   useEffect(() => {
     if (!isClient) return;
-
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -316,4 +314,3 @@ const FloatingParticles: React.FC = () => {
 };
 
 export default FloatingParticles;
-
