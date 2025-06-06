@@ -27,7 +27,8 @@ export default function Home() {
       if (currentHeroHeight > 0 && latest > currentHeroHeight * 0.8) {
         setShowProjects(true);
       } else {
-        setShowProjects(false);
+        // Optional: Hide projects if scrolling back up above the threshold
+        // setShowProjects(false); 
       }
     }
 
@@ -35,7 +36,7 @@ export default function Home() {
       const projectsSectionRect = projectsSectionRef.current.getBoundingClientRect();
       const viewportMiddle = window.innerHeight / 2;
       
-      if (projectsSectionRect.top <= viewportMiddle) {
+      if (projectsSectionRect.top <= viewportMiddle && projectsSectionRect.bottom >= viewportMiddle) {
         setIsTextFadingOut(true);
       } else {
         setIsTextFadingOut(false);
@@ -52,13 +53,12 @@ export default function Home() {
     const targetY = targetElement.getBoundingClientRect().top + window.scrollY;
     const startY = window.scrollY;
     const distance = targetY - startY;
-    const duration = 1500; // 1.5 segundos para uma rolagem mais lenta
+    const duration = 1500; 
     let startTime: number | null = null;
 
     function step(currentTime: number) {
       if (!startTime) startTime = currentTime;
       const progress = Math.min((currentTime - (startTime as number)) / duration, 1);
-      // Easing function (easeOutQuad)
       const easedProgress = progress * (2 - progress);
       window.scrollTo(0, startY + distance * easedProgress);
 
@@ -81,17 +81,15 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <section 
-        ref={heroRef} 
-        className="h-screen w-full relative p-4 overflow-hidden flex flex-col items-center justify-center"
-      >
+      {/* Fixed Hero Content (Text and Button) */}
+      {!splashScreenActive && (
         <motion.div 
-          className="text-center flex flex-col items-center"
+          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center flex flex-col items-center z-20 w-full max-w-3xl px-4"
           initial={{ opacity: 0 }} 
           animate={{ 
-            opacity: !splashScreenActive && !isTextFadingOut ? 1 : 0 
+            opacity: !isTextFadingOut ? 1 : 0 
           }} 
-          transition={{ duration: 0.5, delay: !splashScreenActive ? 0.3 : 0 }} 
+          transition={{ duration: 0.5, delay: 0.3 }} 
         >
           <motion.h1 
             className="font-headline mb-4 md:mb-6 hero-title-pulse"
@@ -100,8 +98,8 @@ export default function Home() {
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={!splashScreenActive ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: !splashScreenActive ? 0.6 : 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.6 }}
           >
             CouroComencia.
           </motion.h1>
@@ -112,8 +110,8 @@ export default function Home() {
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
-            animate={!splashScreenActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: !splashScreenActive ? 0.8 : 0 }} 
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.8 }} 
           >
             Apenas tentamos não explodir a internet
           </motion.p>
@@ -124,8 +122,8 @@ export default function Home() {
               color: '#FFFFFF',
             }}
             initial={{ opacity: 0, y: 20 }}
-            animate={!splashScreenActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: !splashScreenActive ? 1.0 : 0 }} 
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 1.0 }} 
           >
             Spoiler: falhamos (mas com estilo)
           </motion.p>
@@ -134,14 +132,23 @@ export default function Home() {
             aria-label="Ver projetos"
             onClick={slowScrollToProjects}
             initial={{ opacity: 0, y: 20 }}
-            animate={!splashScreenActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: !splashScreenActive ? 1.2 : 0 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 1.2 }}
           >
             ↓
           </motion.button>
         </motion.div>
+      )}
+
+      {/* Hero Section Placeholder for scroll triggering */}
+      <section 
+        ref={heroRef} 
+        className="h-screen w-full relative p-4 overflow-hidden flex flex-col items-center justify-center"
+      >
+        {/* Content is now in the fixed div above */}
       </section>
 
+      {/* Projects Section that scrolls up */}
       <motion.div
         id="projects" 
         ref={projectsSectionRef}
@@ -151,7 +158,7 @@ export default function Home() {
           y: !splashScreenActive && showProjects ? 0 : 50 
         }}
         transition={{ duration: 0.8, ease: "easeOut", delay: !splashScreenActive ? 0.1 : 0 }}
-        className="w-full"
+        className="w-full relative z-10 bg-background" // Ensures it's below fixed hero and has a background
       >
         <ProjectShowcaseSection />
       </motion.div>
