@@ -28,7 +28,7 @@ const PortfolioFooter = () => {
       <div className="container mx-auto px-4 text-center">
         <div className="flex justify-center mb-6 md:mb-8">
           <Image 
-            src="" 
+            src="/imgs/logo-rocket.png" 
             alt="CouroComencia Logo" 
             width={100} 
             height={100} 
